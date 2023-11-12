@@ -1,9 +1,21 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import FacebookProvider from "next-auth/providers/facebook";
 import axios from "@/libs/axios";
+import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
+
 
 export const options: NextAuthOptions = {
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        }),
+        FacebookProvider({
+            clientId: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET
+        }),
         CredentialsProvider({
             // The name to display on the sign in form (e.g. "Sign in with...")
             name: "Credentials",
@@ -12,15 +24,15 @@ export const options: NextAuthOptions = {
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
             credentials: {
-                username: {  },
-                password: {  },
+                username: {},
+                password: {},
             },
             async authorize(credentials) {
                 // Add logic here to look up the user from the credentials supplied
-                const res = await axios.post("http://192.168.1.176:5000/api/Authentication/login", {
-                      email : credentials?.username,
-                      password: credentials?.password,
-                    })
+                const res = await axios.post("/api/Authentication/login", {
+                    username: credentials?.username,
+                    password: credentials?.password,
+                })
                 const user = await res.data;
                 if (user) {
                     // Any object returned will be saved in `user` property of the JWT
@@ -31,22 +43,51 @@ export const options: NextAuthOptions = {
                     // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
                 }
             },
-        }) 
+        })
     ],
     callbacks: {
         async jwt({ token, user, account }) {
-          return { ...token, ...user };
+            console.log(`jwt token:`, { token, user, account })
+            if (user) {
+                token.sub = account.provider;
+
+            }
+            return { ...token, ...user };
         },
         async session({ session, token, user }) {
-          session.user = token as any;
-          return session;
+            if (token.sub === "google") {
+                try {
+                    await axios.get(`/api/User/CheckUserByEmail?email=${token.email}`)
+                }
+                catch (error) {
+                    const body = {
+                        UserName: token.email,
+                        Email: token.email,
+                        Password: "Quyen1234@",
+                        Fullname: token.name,
+                        Image: token.picture,
+                    }
+                    try {
+                        await axios.post("/api/Authentication/register", body);
+                    }
+                    catch (error) {
+                        console.log(error.response)
+                    }
+                }
+
+            }
+            session.user = token as any;
+            console.log(`session:`, { session, token, user })
+            return session;
         },
-        
-      },
-    session: {
-        strategy: "jwt" 
     },
+    session: {
+        strategy: "jwt"
+    },
+    secret: process.env.NEXTAUTH_SECRET,
     pages: {
         signIn: "/signIn",
+
     },
 }
+

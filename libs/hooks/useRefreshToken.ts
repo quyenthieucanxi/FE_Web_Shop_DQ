@@ -1,13 +1,14 @@
 "use client";
-import axios from "axios";
+import axios from "../axios";
 import { signIn, useSession } from "next-auth/react";
 
 export const useRefreshToken = () => {
   const { data: session } = useSession();
 
   const refreshToken = async () => {
-    const res = await axios.post("/auth/refresh", {
-      refresh: session?.user.refreshToken,
+    const res = await axios.post("/api/Authentication/newToken", {
+      accessToken: session?.user.accessToken,
+      refreshToken: session?.user.refreshToken,
     });
 
     if (session) session.user.accessToken = res.data.accessToken;

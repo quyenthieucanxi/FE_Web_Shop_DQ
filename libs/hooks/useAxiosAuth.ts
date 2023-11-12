@@ -18,7 +18,6 @@ const useAxiosAuth = () => {
       },
       (error) => Promise.reject(error)
     );
-
     const responseIntercept = axiosAuth.interceptors.response.use(
       (response) => response,
       async (error) => {
