@@ -1,5 +1,4 @@
 'use client';
-import { usePathname } from 'next/navigation'
 import { IoMenuSharp } from 'react-icons/io5';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { IoMdNotificationsOutline } from 'react-icons/io';
@@ -10,24 +9,21 @@ import { LuPenSquare } from 'react-icons/lu';
 import { VscAccount } from 'react-icons/vsc';
 import { BsChevronDown } from 'react-icons/bs';
 import Link from 'next/link';
-import { options } from '@/app/api/auth/[...nextauth]/options';
 import { signOut, useSession } from 'next-auth/react';
 import { useEffect, useState} from 'react';
 import useAxiosAuth from '@/libs/hooks/useAxiosAuth';
+import { CheckUrl } from '@/utils/TestHelper';
+import { useRouter } from 'next/navigation';
 
-export const CheckUrl = (): boolean => {
-    const pathname = usePathname();
-    const checkURL = (pathname !== options.pages?.signIn && pathname !== "/signUp" && pathname != "/forgetPassword") ? true : false;
-    return checkURL;
-}
+
 const Header = () => {
+    const router = useRouter();
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [user, setUser] = useState(null);
     const { data: session } = useSession();
     const toggleDropdown = (): void => {
         setDropdownOpen(!isDropdownOpen);
     };
-    console.log("render");
     const axiosAuth = useAxiosAuth();
     useEffect(() => {
         const fetchData = async () => {
@@ -35,18 +31,20 @@ const Header = () => {
                 try {
                     const res = await axiosAuth.get("/api/User/GetMyInfo");
                     setUser(res.data);
-                    console.log(res);
                 } catch (error) {
                     console.error('Error fetching data from the API', error);
                 }
             }
         };
-        fetchData();
+        const delay = setTimeout(() => {
+            fetchData();
+          }, 1500);
+        return () => clearTimeout(delay);
     }, [session?.user?.accessToken]);
     return (
         CheckUrl()
         &&
-        <header className="bg-yellow-400 px-6 py-4 flex items-center max-md:px-2 max-lg:px-4">
+        <header className="bg-yellow-400 px-6 py-4 flex items-center max-md:px-2 max-lg:px-4 fixed top-0 w-full z-[1000]">
             <div className="flex">
                 <Link href="/">
                     <img className="w-full h-[40px] hover:cursor-pointer" src="/images/logo.png" alt="logo" />
@@ -63,7 +61,7 @@ const Header = () => {
                 <BsChevronDown className="max-md:hidden" size={12} />
                 {isDropdownOpen && (
                     <ul
-                        className="z-[1] p-2 shadow menu menu-sm dropdown-content bg-[#D2E0FB] rounded-box absolute w-[158px] top-16"
+                        className="z-[1000] p-2 shadow menu menu-sm dropdown-content bg-[#D2E0FB] rounded-box absolute w-[158px] top-12"
                     >
                         <li className="text-[14px] h-[32px] flex justify-center items-center hover:bg-[#c1d2f6] cursor-pointer hover:text-white">
                             <Link href="/user/:id">Tài khoản của tôi</Link>
@@ -139,7 +137,7 @@ const Header = () => {
                 }
             </div>
             <div className='flex justify-center'>
-                <button className="bg-orange-400 text-white px-6 py-2 rounded ml-6 flex items-center space-x-2 w-full">
+                <button onClick={() => { router.push("/post") }} className="bg-orange-400 text-white px-6 py-2 rounded ml-6 flex items-center space-x-2 w-full">
                     <span><LuPenSquare size={18} /></span>
                     <span className='text-sm max-md:text-xs'>ĐĂNG TIN</span>
                 </button>

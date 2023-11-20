@@ -2,14 +2,12 @@
 import { FaFacebook } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
-import { CheckUrl } from "./Header";
-
+import { CheckUrl } from "@/utils/TestHelper";
 function Footer() {
-    console.log("render-footer");
     return (
         CheckUrl()
         &&
-        <footer className="bg-yellow-400 py-6 lg:px-32 md:px-28 sm:px-24 max-sm:flex max-sm:justify-center text-black-700 fixed bottom-0 left-0 w-full ">
+        <footer className="bg-yellow-400 py-6 lg:px-32 md:px-28 sm:px-24 max-sm:flex max-sm:justify-center text-black-700  bottom-0 left-0 w-full ">
             <div className="max-w-screen-xl mx-auto flex flex-wrap justify-between">
                 <div className="w-full lg:w-1/4 md:w-1/3 sm:w-1/2 sm:p-4 max-sm:w-full  max-sm:p-2 max-sm:text-center">
                     <a href="#" className="block mb-1 font-semibold hover:text-gray-900 transition duration-300 ease-in-out ">Hỗ trợ khách hàng</a>

@@ -33,7 +33,7 @@ export const options: NextAuthOptions = {
                     username: credentials?.username,
                     password: credentials?.password,
                 })
-                const user = await res.data;
+                const user = await res?.data;
                 if (user) {
                     // Any object returned will be saved in `user` property of the JWT
                     return user;

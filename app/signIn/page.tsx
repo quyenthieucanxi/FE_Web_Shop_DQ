@@ -12,6 +12,6 @@ export default async function SignInPage(props: Props) {
         redirect("/")
     }   
     return (
-        <Login callbackUrl={props.searchParams?.callbackUrl}  />
+        <Login callbackUrl={props?.searchParams?.callbackUrl}  />
     )
 }

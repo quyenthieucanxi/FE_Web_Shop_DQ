@@ -12,10 +12,9 @@ import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 
 type Props = {
     callbackUrl?: string,
-    error?: string,
 }
 export default function Login(props: Props) {
-    const router = useRouter();
+    const router = useRouter()
     const [error, setError] = useState("")
     const axiosAuth = useAxiosAuth();
     const HandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -27,8 +26,10 @@ export default function Login(props: Props) {
             redirect: false,
         })   
         if (!res?.error) {
-            router.push(props.callbackUrl ?? "http://localhost:3000");
-            router.refresh();
+            setTimeout(() => {
+                router.push(props.callbackUrl ?? "http://localhost:3000");
+                router.refresh();
+              }, 1000);
         }
         else 
         {
@@ -39,7 +40,9 @@ export default function Login(props: Props) {
         }
     }
     const handleSignGoogle = () => {
-         signIn("google")
+        setTimeout(() => {
+            signIn("google");
+        },2000)
     }
     return (
         <div className="flex justify-center lg:items-center h-screen ">
@@ -57,7 +60,7 @@ export default function Login(props: Props) {
                     </div>
                 }
                 <form onSubmit={HandleSubmit} className="space-y-4" >
-                    <Input label="username" type="text" text="Tên đăng nhập:" ></Input>
+                    <Input label="username" type="text" text="Tên đăng nhập:"  ></Input>
                     <Input label="password" type="password" text="Mật khẩu:" ></Input>
                     <div>
                         <a className="text-blue-500 text-sm" href="">Quên mật khẩu?</a>
