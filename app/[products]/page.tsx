@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 
 import Toast from "@/components/Toast";
 import { Metadata } from "next/types";
+import { getBefore, getBeforeLast } from "@/utils/StringHelper";
+import { useEffect, useState } from "react";
 
 
 const Slider = dynamic(() => import("@/components/Slider"), { ssr: false });
@@ -22,15 +24,42 @@ export default function SearchPage({ params }: { params: { products: string } })
     const search = searchParams.get("search")
     const catPath = params.products;
     const orderByDirection = searchParams.get("orderByDirection")
-    const url = window.location.href;
+    const [url,setUrl] = useState("")
+    useEffect(() => {
+        setUrl(window.location.href)
+    }, []);
     const handleSortASC = () => {
-            url.includes('?') ? router.push(`${url}&orderByDirection=ASC`) : router.push(`${url}?orderByDirection=ASC`)
+        if (url.includes('?')) {
+            if (url.includes('orderByDirection')) {
+                router.push(`${getBeforeLast(url, '=')}=ASC`)
+            }
+            else {
+                router.push(`${url}&orderByDirection=ASC`)
+            }
+            router.refresh()
+        }
+        else {
+            router.push(`${url}?orderByDirection=ASC`)
+            router.refresh()
+        }
     }
     const handleSortDESC = () => {
-        url.includes('?') ? router.push(`${url}&orderByDirection=DESC`) : router.push(`${url}?orderByDirection=DESC`)
+        if (url.includes('?')) {
+            if (url.includes('orderByDirection')) {
+                router.push(`${getBeforeLast(url, '=')}=DESC`)
+            }
+            else {
+                router.push(`${url}&orderByDirection=DESC`)
+            }
+            router.refresh()
+        }
+        else {
+            router.push(`${url}?orderByDirection=DESC`)
+            router.refresh()
+        }
     }
     return (
-        <>  
+        <>
             <Toast />
             <section>
                 <div className="mx-auto p-4 bg-white rounded-md max-w-[960px] mt-20">
@@ -72,4 +101,8 @@ export default function SearchPage({ params }: { params: { products: string } })
             </section>
         </>
     )
+}
+
+function useRouterEffect(arg0: () => void, arg1: any[]) {
+    throw new Error("Function not implemented.");
 }

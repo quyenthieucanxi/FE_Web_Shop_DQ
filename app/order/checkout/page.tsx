@@ -20,7 +20,7 @@ export default function OrderPage() {
     const searchParams = useSearchParams()
     const itemsKeys = searchParams.get("itemKeys")
     const quantity = Number.parseInt(searchParams.get("quantity"))
-   
+
     const [note, setNote] = useState("")
     const onChangeNote = (e) => {
         setNote(e.target.value)
@@ -95,7 +95,7 @@ export default function OrderPage() {
         const fetchFeeShipping = async () => {
             try {
                 if (districtID !== 0) {
-                    const res = await getFeeShipping({from_district_id: 3695, to_district_id: districtID});
+                    const res = await getFeeShipping({ from_district_id: 3695, to_district_id: districtID });
                     setFee(res.data.total);
                 }
             } catch (error) {
@@ -105,19 +105,19 @@ export default function OrderPage() {
         fetchFeeShipping();
     }, [districtID]);
     // handleOrder 
-    const [selectedShip,setSelectedShip] = useState("Giao Hàng Nhanh");
+    const [selectedShip, setSelectedShip] = useState("Giao Hàng Nhanh");
     const onChangeShip = (e) => {
         setSelectedShip(e.target.value)
     }
-       
-    const [selectedPayment,setSelectedPayment] = useState("Thanh toán khi nhận hàng");
+
+    const [selectedPayment, setSelectedPayment] = useState("Thanh toán khi nhận hàng");
     const onChangePayment = (e) => {
         setSelectedPayment(e.target.value);
     }
     const totalPrice = quantity * Number.parseInt(post?.price) + fee;
     const handleOrder = async () => {
         try {
-            const res =  await axiosAuth.post(`/api/Order/Create`, {
+            const res = await axiosAuth.post(`/api/Order/Create`, {
                 productId: post?.id,
                 addressShippingID: addressDefaut?.id,
                 quantity: quantity,
@@ -162,12 +162,16 @@ export default function OrderPage() {
                         THAY ĐỔI
                     </button>
                 </div>
-                <div className="flex text-sm font-normal">
-                    {addressDefaut?.recipientName} &nbsp;<p>| &nbsp;{addressDefaut?.phone}</p>
-                </div>
-                <div className="text-[#777] text-sm font-normal mt-2">
-                    {`${addressDefaut?.addressDetail}, ${addressDefaut?.distrist}, ${addressDefaut?.province}`}
-                </div>
+                {
+                    !!addressDefaut && <>
+                        <div className="flex text-sm font-normal">
+                            {addressDefaut?.recipientName} &nbsp;<p>| &nbsp;{addressDefaut?.phone}</p>
+                        </div>
+                        <div className="text-[#777] text-sm font-normal mt-2">
+                            {`${addressDefaut?.addressDetail}, ${addressDefaut?.distrist}, ${addressDefaut?.province}`}
+                        </div>
+                    </>
+                }
                 {
                     !!!addressDefaut &&
                     <button onClick={openModalAddress} className="px-2 text-sm bg-slate-200 my-2">
@@ -179,7 +183,7 @@ export default function OrderPage() {
                 <div className="flex gap-3 items-center">
                     <div className="flex items-center rounded-[50%] h-6 w-6 border-1 border-slate-600">
                         <img className="w-full rounded-[50%]"
-                            src={`${post?.user?.avatarUrl}`} alt="img"/>
+                            src={`${post?.user?.avatarUrl}`} alt="img" />
                     </div>
                     <div className="flex justify-between w-full">
                         <div className="text-sm font-bold">{post?.user?.fullName}</div>
@@ -205,8 +209,8 @@ export default function OrderPage() {
                 <div className="flex justify-between items-center py-4 gap-2">
                     <div className="w-[20px]">
                         <label htmlFor="ship" className="relative w-full h-20px cursor-pointer">
-                            <input onChange={onChangeShip} className=" w-0 h-0 invisible" type="radio" name="address" id="ship" value="Giao Hàng Nhanh" checked={selectedShip === "Giao Hàng Nhanh"}/>
-                            <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedShip ===  "Giao Hàng Nhanh" ?  "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : "" } `} >
+                            <input onChange={onChangeShip} className=" w-0 h-0 invisible" type="radio" name="address" id="ship" value="Giao Hàng Nhanh" checked={selectedShip === "Giao Hàng Nhanh"} />
+                            <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedShip === "Giao Hàng Nhanh" ? "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : ""} `} >
                             </span>
                         </label>
                     </div>
@@ -226,7 +230,7 @@ export default function OrderPage() {
                         <div className="w-[20px]">
                             <label htmlFor="payment-delivery" className="relative w-full h-20px cursor-pointer">
                                 <input onChange={onChangePayment} className=" w-0 h-0 invisible" type="radio" name="payment" id="payment-delivery" checked={selectedPayment === "Thanh toán khi nhận hàng"} value="Thanh toán khi nhận hàng" />
-                                <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedPayment ===  "Thanh toán khi nhận hàng" ?  "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : "" } `} >
+                                <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedPayment === "Thanh toán khi nhận hàng" ? "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : ""} `} >
                                 </span>
                             </label>
                         </div>
@@ -235,8 +239,8 @@ export default function OrderPage() {
                     <div className="flex justify-between items-center gap-2 mb-3">
                         <div className="w-[20px]">
                             <label htmlFor="payment-MoMo" className="relative w-full h-20px cursor-pointer">
-                                <input onChange={onChangePayment} className=" w-0 h-0 invisible" type="radio" name="payment" id="payment-MoMo" checked={selectedPayment === "Thanh toán bằng ví MoMo"}  value="Thanh toán bằng ví MoMo" />
-                                <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedPayment === "Thanh toán bằng ví MoMo" ?  "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : "" } `} >
+                                <input onChange={onChangePayment} className=" w-0 h-0 invisible" type="radio" name="payment" id="payment-MoMo" checked={selectedPayment === "Thanh toán bằng ví MoMo"} value="Thanh toán bằng ví MoMo" />
+                                <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedPayment === "Thanh toán bằng ví MoMo" ? "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : ""} `} >
                                 </span>
                             </label>
                         </div>

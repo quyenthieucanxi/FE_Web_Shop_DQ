@@ -31,7 +31,8 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
         const checkLikePost = async () => {
             try {
                 const res = await axiosAuth.get(`/api/User/CheckSavesPost?pathPost=${params.slug[0]}`)
-                setIsLiked(true);
+                if (res.data.data === true)
+                    setIsLiked(true);
             }
             catch (error) {
 
@@ -47,7 +48,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
         queryKey: ["path", params.slug[0]],
         queryFn: fetchData,
     })
-    const [quantity,setQuantity] = useState(1);
+    const [quantity, setQuantity] = useState(1);
     const handleMinusQuantity = () => {
         setQuantity(pre => pre - 1)
     }
@@ -102,7 +103,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                         </div>
                     </section>
                     <section>
-                        <div className="flex mx-auto max-w-[960px] bg-white pt-12">
+                        <div className="flex mx-auto max-w-[960px] bg-white pt-12 mb-6">
                             <div className="w-[66.66666667%] px-[18px]">
                                 <img className="w-full  object-cover" src={data?.urlImage} alt="" />
                                 <div>
@@ -157,15 +158,17 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                     <button disabled={quantity === 1} onClick={handleMinusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><HiMinus />
                                     </button>
                                     <input type="text" value={quantity} readOnly className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
-                                    <button onClick={handlePlusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><GoPlus /></button>
+                                    <button disabled={quantity === data?.quantity} onClick={handlePlusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><GoPlus /></button>
                                 </div>
-
-                                <div className="mt-3">
-                                    <Button onClick={() => {
-                                        router.push(`/order/checkout?itemKeys=${data?.id}&quantity=${quantity}`);
-                                        router.refresh();
-                                    }} type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
-                                </div>
+                                {
+                                    data?.user?.role === 'Admin' 
+                                    && <div className="mt-3">
+                                        <Button onClick={() => {
+                                            router.push(`/order/checkout?itemKeys=${data?.id}&quantity=${quantity}`);
+                                            router.refresh();
+                                        }} type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
+                                    </div>
+                                }
                                 <div className=" mt-6">
                                     <img width="100px" height="100px" className="mr-[15px] float-left" src="https://static.chotot.com/storage/images/tips/1_mobile.png" alt="" />
                                     <div>

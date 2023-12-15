@@ -15,3 +15,18 @@ export const ValidateInput = (text: string =" ", fieldName: string): string | nu
     }
     return null; 
   };
+
+  export const ValidateInputPrice = (text: string =" ", fieldName: string): string | null => {
+    const inputTrim  = text.trim()
+    if ( Number.parseInt(inputTrim) < 0 || Number.parseInt(inputTrim) < 1000 ) {
+      return `${fieldName} không hợp lệ.`;
+    }
+    return null; 
+  };
+  export const ValidateInputQuantity = (text: string =" ", fieldName: string): string | null => {
+    const inputTrim  = text.trim()
+    if ( Number.parseInt(inputTrim) < 0 ) {
+      return `${fieldName} không hợp lệ.`;
+    }
+    return null; 
+  };

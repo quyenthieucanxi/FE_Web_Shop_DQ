@@ -11,7 +11,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ req, token }) => {
         if (req.nextUrl.pathname.includes("/admin")) {
-          return token?.role === "User"
+          return token?.role === "Admin"
         }
         return Boolean(token)
       }

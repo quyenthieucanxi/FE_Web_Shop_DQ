@@ -58,7 +58,6 @@ export default function LabTabs(props: Props) {
                                         data?.data?.postList.map((product) => {
                                             return (
                                                 <Product key={product.id} product={product} typeDisplay="col" />
-
                                             );
                                         })
                                     }

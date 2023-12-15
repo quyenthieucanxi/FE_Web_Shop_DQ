@@ -7,7 +7,7 @@ import { useState, useRef, FormEvent } from "react";
 import Input from "@/components/Input";
 import Button from "@/components/Button";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
-import { ValidateInput } from "@/utils/TestHelper";
+import { ValidateInput, ValidateInputPrice, ValidateInputQuantity } from "@/utils/TestHelper";
 import Loading from "@/components/Loading";
 import Toast from "@/components/Toast";
 import { toast } from "react-toastify";
@@ -77,7 +77,7 @@ export default function PostPage() {
                 const res = await axiosAuth.post("/api/Post/Create", body);
                 setTimeout(() => {
                     setIsLoading(false);
-                }, 1000);
+                }, 2000);
                 toast.success("Tin đã đăng thành công", {
                     position: "top-right",
                     autoClose: 3000,
@@ -92,7 +92,6 @@ export default function PostPage() {
                 setSelectedImage(null)
             }
             catch (error) {
-                console.error("Loi", error)
                 toast.error(error.response.data.Message, {
                     position: "top-right",
                     autoClose: 3000,
@@ -126,9 +125,9 @@ export default function PostPage() {
         error.push(errorName)
         const errorDescription = ValidateInput(formDataValues["description"], "Mô tả sản phẩm")
         error.push(errorDescription)
-        const errorPrice = ValidateInput(formDataValues["price"], "Giá")
+        const errorPrice = ValidateInput(formDataValues["price"], "Giá") ?? ValidateInputPrice(formDataValues["price"], "Giá")
         error.push(errorPrice)
-        const errorQuantity = ValidateInput(formDataValues["quantity"], "Số lượng")
+        const errorQuantity = ValidateInput(formDataValues["quantity"], "Số lượng") ?? ValidateInputQuantity(formDataValues["quantity"], "Số lượng")
         error.push(errorQuantity)
         const errorAddress = ValidateInput(selectedAddress, "Địa chỉ")
         error.push(errorAddress)
@@ -137,7 +136,6 @@ export default function PostPage() {
         const errorCat = ValidateInput(formDataValues["categoryId"], "Danh mục")
         error.push(errorCat)
         setErrors(error)
-        console.log(errors)
     }
     const [isModalAddressOpen, setIsModalAddressOpen] = useState(false);
     const openModalAddress = () => {
@@ -152,6 +150,7 @@ export default function PostPage() {
         setSelectedAddress(address);
         closeModalAddress();
     }
+    console.log(errors)
     return (
         <>
             {
@@ -195,7 +194,7 @@ export default function PostPage() {
                                 <form onSubmit={HandleSubmit} className="space-y-6">
                                     <Input label="name" type="text" text="Tên sản phẩm" error={errors[0]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
                                     <Input label="description" type="text" text="Mô tả sản phẩm" error={errors[1]} textarea={true} className="h-[110px]" classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
-                                    <Input label="price" type="text" text="Giá" error={errors[2]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
+                                    <Input label="price" type="number" text="Giá" error={errors[2]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
                                     <Input label="quantity" type="number" text="Số lượng" placeholder="0" error={errors[3]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
                                     <div onClick={openModalAddress} className="border-[#cacaca] w-full h-12  rounded border border-solid relative cursor-pointer ">
                                         <label className={` absolute top-[12px] left-[12px] cursor-text text-[#8c8c8c] text-sm capitalize after:content-['*'] after:ml-2 after:text-[#e5193b] ${selectedAddress ? "scale(.7143) translate-y-[-10px]" : ""} `} htmlFor="Địa chỉ">Địa chỉ</label>
@@ -209,7 +208,7 @@ export default function PostPage() {
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 py-4">
                                         <Button onClick={HandleViewPrevious} className="font-normal" type="primary" childern="XEM TRƯỚC" />
-                                        <Button disabled={errors.length === 0 ? true : false} typeProp="submit" className={`font-normal`} childern="ĐĂNG TIN" />
+                                        <Button disabled={errors.length > 0 && !!!errors[0] ? false : true} typeProp="submit" className={`font-normal`} childern="ĐĂNG TIN" />
                                     </div>
                                 </form>
                             </div>

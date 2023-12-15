@@ -7,9 +7,8 @@ import LabTabs from "@/components/LabTabsOrder";
 export default async function OrderPage () {
     const session = await  getServerSession(options);
     return (
-
         <div>
-            <div className="mx-auto max-w-[960px] bg-white mt-20 py-3 px-6">
+            <div className="mx-auto max-w-[960px] bg-white mt-20 py-3 px-6 ">
                 <div className="flex gap-3 items-center">
                     <div className="flex items-center rounded-[100%] h-12 w-12 border-1 border-slate-600">
                         <img className="w-full h-full rounded-[100%]"
@@ -22,7 +21,7 @@ export default async function OrderPage () {
                     </div>
                 </div>
             </div>
-            <div className='mx-auto max-w-[960px] bg-white border-t'>
+            <div className='mx-auto max-w-[960px] bg-white border-t h-screen'>
                 <LabTabs tabs={["CHỜ XÁC NHẬN","ĐANG XỬ LÝ","ĐANG GIAO","ĐÃ GIAO"]} />
             </div>
         </div>

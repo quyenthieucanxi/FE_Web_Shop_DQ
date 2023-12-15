@@ -111,8 +111,15 @@ const Header = () => {
         ) ?? categories.find((category) =>
             category.categoryName.toLowerCase().includes(searchSlug)
         );
-        matchedCategory ? router.push(`/${matchedCategory.categoryPath}?search=${search}`) : router.push(`/${categories[0].categoryPath}?search=${search}`) 
-        console.log(matchedCategory)
+        // matchedCategory ? router.push(`/${matchedCategory?.categoryPath}?search=${search}`) : router.push(`/${categories[0]?.categoryPath}?search=${search}`) 
+        // router.refresh()
+        if (matchedCategory) {
+            
+            router.push(`/${matchedCategory?.categoryPath}?search=${search}`);
+        } else {
+            router.push(`/${categories[0]?.categoryPath}?search=${search}`);
+        }
+        router.refresh();
     }
     return (
         CheckUrl()

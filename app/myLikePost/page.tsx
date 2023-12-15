@@ -64,8 +64,8 @@ export default function MyLikePostPage() {
                                             </div>
                                             <div className=" absolute bottom-0 left-0">
                                                 <div className="mt-2 flex items-center text-gray-500">
-                                                        <img className="h-4 w-4 object-cover rounded-[50%]" src={product.user.avatarUrl} alt="img" />
-                                                    <span className="text-[12px] ml-[4px] ">{product.user.fullName}</span>
+                                                        <img className="h-4 w-4 object-cover rounded-[50%]" src={product.user?.avatarUrl} alt="img" />
+                                                    <span className="text-[12px] ml-[4px] ">{product.user?.fullName}</span>
                                                     <div className="relative after:inline-block after:content-['.'] after:bottom-1/4 after:-translate-y-1/4 after:ml-1">
                                                     </div>
                                                     <span className="text-[12px] mx-[3px] whitespace-nowrap">{CalculateTimePassedAsync(product.createdTime)}</span>

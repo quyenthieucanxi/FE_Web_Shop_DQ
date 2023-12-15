@@ -11,7 +11,6 @@ import TableRow from '@mui/material/TableRow';
 import { useState } from 'react';
 import { IoCheckmark } from "react-icons/io5";
 import { TiDeleteOutline } from "react-icons/ti";
-import { Order, OrderList } from '@/types/order';
 
 
 interface StickyHeadTableProps {

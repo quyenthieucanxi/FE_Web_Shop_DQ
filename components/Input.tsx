@@ -34,7 +34,6 @@ export default function Input({ label, type, text, placeholder, className, class
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
-                    min="1" max="100"
                     required
                     className={`w-full px-3 py-2 border border-solid border-gray-300 rounded-md focus:outline-none focus:border-blue-300 ${className ?? ""} `}
                 />

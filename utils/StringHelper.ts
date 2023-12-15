@@ -40,3 +40,20 @@ export const makeSlug = (inputStr: string) =>  {
  
      return slug;
 }
+
+ export const getBefore = (inputString, char) => {
+    var index = inputString.indexOf(char);
+    if (index !== -1) {
+        return inputString.substring(0, index);
+    } else {
+        return inputString;
+    }
+}
+export const getBeforeLast = (inputString, char) => {
+    var index = inputString.lastIndexOf(char);
+    if (index !== -1) {
+        return inputString.substring(0, index);
+    } else {
+        return inputString;
+    }
+}
