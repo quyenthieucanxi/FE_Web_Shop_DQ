@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth";
 import { options } from "./api/auth/[...nextauth]/options";
 import TabCategory from "@/components/TabCategrory";
 import ListProducts from "@/components/ListProducts";
+import Toast from "@/components/Toast";
 
 const Slider = dynamic(() => import("@/components/Slider"), { ssr: false });
 
@@ -13,10 +14,7 @@ const Slider = dynamic(() => import("@/components/Slider"), { ssr: false });
 
 export default async function Home() {
   const session = await getServerSession(options)
-  console.log(session?.user?.accessToken)
-  const expireDate = new Date(session?.expires)
-  const currentDate = new Date();
-  if (session?.user )
+  if (!!!session?.user )
   {
     signIn();
   }
@@ -77,6 +75,7 @@ export default async function Home() {
           </div>
         </div>
       </section>
+      <Toast />
     </main>
   )
 }

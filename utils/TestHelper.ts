@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 export const CheckUrl = (): boolean => {
     const pathname = usePathname();
-    const checkURL = (pathname !== options.pages?.signIn && pathname !== "/signUp" && pathname != "/forgetPassword") ? true : false;
+    const checkURL = (pathname !== options.pages?.signIn && pathname !== "/signUp" && pathname != "/forgetPassword" ) ? true : false;
     return checkURL;
 }
 

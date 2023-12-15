@@ -20,24 +20,20 @@ export default function Login(props: Props) {
     const HandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
-        const res = await signIn("credentials", {
-            username: formData.get("username"),
-            password: formData.get("password"),
-            redirect: false,
-        })   
-        if (!res?.error) {
-            setTimeout(() => {
-                router.push(props.callbackUrl ?? "http://localhost:3000");
-                router.refresh();
-              }, 1000);
-        }
-        else 
-        {
-            if (res.error.includes("404")) {
-                setError("Email hoặc mật khẩu không chính xác")
+            const res = await signIn("credentials", {
+                username: formData.get("username"),
+                password: formData.get("password"),
+                redirect: false,
+            })
+            if (!res?.error) {
+                setTimeout(() => {
+                    router.push(props.callbackUrl ?? "http://localhost:3000");
+                    router.refresh();
+                  }, 1000);
             }
-            setError("Server error: " + res.error)
-        }
+            else {
+                setError("Tài khoản hoặc mật khẩu không đúng")
+            }
     }
     const handleSignGoogle = () => {
         setTimeout(() => {

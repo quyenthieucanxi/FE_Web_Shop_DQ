@@ -10,7 +10,7 @@ export const ConvertToDDMMYYYY = (inputDateString : string) => {
     return formattedDateString;
 }
 
-export const CalculateTimePassedAsync = (timeInput: Date): string => {
+export const CalculateTimePassedAsync = (timeInput: string): string => {
         const updatedTime: Date = new Date(timeInput);
         const nowTime: Date = new Date();
         const timeDifferenceInMilliseconds: number = nowTime.getTime() - updatedTime.getTime();
@@ -23,14 +23,10 @@ export const CalculateTimePassedAsync = (timeInput: Date): string => {
         } else if (timeDifferenceInMilliseconds < 1000 * 60 * 60 * 24) {
             const hoursPassed = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60));
             return `${hoursPassed} giờ trước`;
-        } else if (timeDifferenceInMilliseconds < 1000 * 60 * 60 * 24 * 30) {
+        } else if (timeDifferenceInMilliseconds < 1000 * 60 * 60 * 24 * 7) {
             const daysPassed = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24));
             return `${daysPassed} ngày trước`;
-        } else if (timeDifferenceInMilliseconds < 1000 * 60 * 60 * 24 * 30 * 12) {
-            const monthsPassed = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24 * 30));
-            return `${monthsPassed} tháng trước`;
-        } else {
-            const yearsPassed = Math.floor(timeDifferenceInMilliseconds / (1000 * 60 * 60 * 24 * 30 * 12));
-            return `${yearsPassed} năm trước`;
-        }
+        } else if (timeDifferenceInMilliseconds < 1000 * 60 * 60 * 24 * 30) {
+            return ConvertToDDMMYYYY(timeInput);
+        } 
 }

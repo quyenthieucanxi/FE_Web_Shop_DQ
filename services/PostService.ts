@@ -1,11 +1,35 @@
 import axios from "@/libs/axios";
-import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
-import { useSession } from "next-auth/react";
 
 
-
-export async function AddPost(body: object) {
-    const axiosAuth = useAxiosAuth()
-    const res = await axiosAuth.post("/api/Post/Create", body);
+export const GetPostLimite = async (page: number, limit: number, catPath?: string, search?: string, orderByDirection?: string) => {
+    //const res = await axios.get(`/api/Post/GetAllByItemPage?page=${page}&limit=${limit}${catPath ?  `&catName=${catPath}&${search}`: ``}&orderByDirection=${orderByDirection}`)
+    const catPathQuery = catPath ? `&catName=${catPath}` : '';
+    const searchQuery = search ? `&search=${search}` : '';
+    const res = await axios.get(`/api/Post/GetAllByItemPage?page=${page}&limit=${limit}${catPathQuery}${searchQuery}&orderByDirection=${orderByDirection}`);
     return res.data;
 }
+
+export const GetPostById = async (id: string) => {
+    const res = await axios.get(`/api/Post/GetById?postId=${id}`)
+    return res.data
+}
+export const GetPostByPath = async (path: string) => {
+    const res = await axios.get(`/api/Post/GetByPath?pathPost=${path}`)
+    return res.data
+}
+
+export const GetPostByStatus = async (status: string, page?: number, limit?: number) => {
+    const res = await axios.get(`/api/Post/GetByStatus?${page && limit ? `page=${page}&limit=${limit}&status=${status}` : `status=${status}`} `)
+    return res.data;
+}
+
+export const GetAll = async () => {
+    const res = await axios.get(`/api/Post/GetAll`)
+    return res.data;
+}
+
+export const UpdateStatus = async (id: string, status) => {
+    const res = await axios.put(`/api/Post/UpdateStatus/${id}?status=${status}`)
+    return res.data;
+}
+

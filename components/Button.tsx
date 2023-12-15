@@ -6,9 +6,9 @@ export const SIZE_BUTTON  = {
 }
 
 export const TYPE_BUTTON = {
-    default : "bg-orange-400 text-white hover:bg-white hover:text-[#f80]",
-    primary : "bg-white text-[#f80] hover:bg-orange-400 hover:text-white",
-    secondary : "bg-red-500 hover:bg-red-600"
+    default : "bg-orange-400 text-white ",
+    primary : "bg-white text-[#f80] ",
+    secondary : "bg-green-600 hover:bg-white hover:text-green-600",
 }
 
 interface Props {
@@ -18,14 +18,15 @@ interface Props {
     className?: string;
     childern: React.ReactNode;
     onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+    disabled? : boolean;
         
 }
 
-export default function Button ( { typeProp = "button", type="default", size="medium",className,childern,onClick } : Props) {
+export default function Button ( { typeProp = "button", type="default", size="medium",className,childern,onClick,disabled= false } : Props) {
     return (
         <>
-            <button type={typeProp} className={`w-full flex justify-center border border-solid text-base border-[#f80] rounded ${SIZE_BUTTON[size]} ${TYPE_BUTTON[type]} ${className}`} 
-            onClick={onClick} >{childern}
+            <button  type={typeProp} className={`w-full flex justify-center border border-solid text-base border-[#f80] rounded ${SIZE_BUTTON[size]} ${TYPE_BUTTON[type]} ${className}`} 
+            onClick={onClick} disabled={disabled} >{childern}
             </button>
         </>
     )

@@ -4,13 +4,14 @@ import GoogleProvider from "next-auth/providers/google";
 import FacebookProvider from "next-auth/providers/facebook";
 import axios from "@/libs/axios";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
+import { GenerateRandomPassword } from "@/utils/PasswordHelper";
 
 
 export const options: NextAuthOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         }),
         FacebookProvider({
             clientId: process.env.FACEBOOK_CLIENT_ID,
@@ -29,28 +30,37 @@ export const options: NextAuthOptions = {
             },
             async authorize(credentials) {
                 // Add logic here to look up the user from the credentials supplied
-                const res = await axios.post("/api/Authentication/login", {
-                    username: credentials?.username,
-                    password: credentials?.password,
-                })
-                const user = await res?.data;
-                if (user) {
-                    // Any object returned will be saved in `user` property of the JWT
-                    return user;
-                } else {
-                    // If you return null then an error will be displayed advising the user to check their details.
-                    return null;
-                    // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+                try {
+                    const res = await axios.post("/api/Authentication/login", {
+                        username: credentials?.username,
+                        password: credentials?.password,
+                    })
+
+                    const user = await res?.data;
+                    if (user) {
+                        // Any object returned will be saved in `user` property of the JWT
+                        return user;
+                    } else {
+                        // If you return null then an error will be displayed advising the user to check their details.
+                        return null;
+                        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+                    }
+                }
+                catch (err) {
+                    
                 }
             },
         })
     ],
     callbacks: {
-        async jwt({ token, user, account }) {
-            console.log(`jwt token:`, { token, user, account })
+        async jwt({ token, user, account, trigger, session }) {
+            console.log(`jwt token:`, { token, user, account, session })
             if (user) {
                 token.sub = account.provider;
-
+                token.accessToken = account.access_token;
+            }
+            if (trigger === "update") {
+                return { ...token, ...session.user };
             }
             return { ...token, ...user };
         },
@@ -63,7 +73,7 @@ export const options: NextAuthOptions = {
                     const body = {
                         UserName: token.email,
                         Email: token.email,
-                        Password: "Quyen1234@",
+                        Password: GenerateRandomPassword(),
                         Fullname: token.name,
                         Image: token.picture,
                     }
@@ -77,7 +87,6 @@ export const options: NextAuthOptions = {
 
             }
             session.user = token as any;
-            console.log(`session:`, { session, token, user })
             return session;
         },
     },

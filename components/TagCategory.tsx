@@ -1,16 +1,17 @@
 
 
 interface Props  {
-    text: string,
-    urlImg: string
+    urlImg: string,
+    catName: string,
+    catPath: string,
 }
 
-export default function TagCategory ({urlImg,text}: Props) {
+export default function TagCategory ({urlImg,catName,catPath}: Props) {
     return (
-        <div className="relative">
-            <a className="flex flex-col justify-center " href="">
-                <img className="rouded-md w-full h-full" src={urlImg} alt={text} loading="lazy" />
-                <span className="text-sm text-center mt-2 w-28 absolute left-[-12px] top-[76px]">{text}</span>
+        <div className="relative h-[90px]">
+            <a className="flex flex-col justify-center items-center" href={`/${catPath}`}>
+                <img className="rouded-md w-full h-full" src={urlImg} alt={catName} loading="lazy" />
+                <span className="text-sm text-center mt-2 w-28 absolute left-[-12px] top-[76px]">{catName}</span>
             </a>
         </div>
     )

@@ -52,7 +52,7 @@ export default function Register() {
                                 <div>
                                     <CgDanger className="w-[20px] h-[20px] text-red-500" />
                                 </div>
-                                <p className="w-[calc(100% - 40px)] text-red-500">{error}</p>
+                                <p className=" text-red-500 overflow-hidden">{error}</p>
                             </div>
                             :
                             (
@@ -61,7 +61,7 @@ export default function Register() {
                                         <div>
                                             <FaCheck className="w-[20px] h-[20px] text-green-500" />
                                         </div>
-                                        <p className="w-[calc(100% - 40px)] text-green-500">{message}</p>
+                                        <p className=" text-green-500 overflow-hidden">{message}</p>
                                     </div> :
                                     <></>
                             )

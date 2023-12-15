@@ -2,9 +2,16 @@
 
 interface Product {
     id: string,
-    name: string,
+    title: string,
+    postPath: string,
     price: string,
-    image: string,
+    urlImage: string,
+    description: string,
+    categoryName: string,
     address: string,
-    time: string,
+    status: string,
+    quantity: number,
+    createdTime: string,
+    modifiedTime?: string,
+    user: User,
 }
