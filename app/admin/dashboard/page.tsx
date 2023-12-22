@@ -19,6 +19,17 @@ interface Column {
     align?: 'right';
     format?: (value: any) => string;
 }
+const columns: Column[] = [
+    { id: 'title', label: 'Tên', minWidth: 100 },
+    { id: 'description', label: 'Mô tả', minWidth: 100 },
+    { id: 'urlImage', label: 'Ảnh', minWidth: 100 },
+    { id: 'price', label: 'Giá', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
+    { id: 'address', label: 'Địa chỉ', minWidth: 100 },
+    { id: 'quantity', label: 'Số lượng', minWidth: 100 },
+    { id: 'createdTime', label: 'Thời gian', minWidth: 100, format: (value: string) => ConvertToDDMMYYYY(value) },
+    { id: 'confirm', label: '', minWidth: 100 },
+    { id: 'cancel', label: '', minWidth: 100 },
+];
 export default function DashBoardPage() {
     const queryClient = useQueryClient();
     const fetchData = async () => {
@@ -31,17 +42,6 @@ export default function DashBoardPage() {
         queryFn: fetchData,
     })
 
-    const columns: Column[] = [
-        { id: 'title', label: 'Tên', minWidth: 100 },
-        { id: 'description', label: 'Mô tả', minWidth: 100 },
-        { id: 'urlImage', label: 'Ảnh', minWidth: 100 },
-        { id: 'price', label: 'Giá', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
-        { id: 'address', label: 'Địa chỉ', minWidth: 100 },
-        { id: 'quantity', label: 'Số lượng', minWidth: 100 },
-        { id: 'createdTime', label: 'Thời gian', minWidth: 100, format: (value: string) => ConvertToDDMMYYYY(value) },
-        { id: 'confirm', label: '', minWidth: 100 },
-        { id: 'cancel', label: '', minWidth: 100 },
-    ];
     const handleConfirmClick = async (rowId: string) => {
         try {
             const res = await UpdateStatus(rowId, "Đang hiển thị");
@@ -65,11 +65,6 @@ export default function DashBoardPage() {
         try {
             const res = await UpdateStatus(rowId, "Huỷ");
             queryClient.invalidateQueries({queryKey: ['post']});
-        }
-        catch (err) {
-
-        }
-        finally {
             toast.success("Tin đã được huỷ", {
                 position: "top-right",
                 autoClose: 3000,
@@ -80,6 +75,9 @@ export default function DashBoardPage() {
                 progress: undefined,
                 theme: "light",
             })
+        }
+        catch (err) {
+            
         }
     };
     return (

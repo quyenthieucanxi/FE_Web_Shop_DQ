@@ -11,7 +11,7 @@ export default withAuth(
     callbacks: {
       authorized: ({ req, token }) => {
         if (req.nextUrl.pathname.includes("/admin")) {
-          return token?.role === "Admin"
+          return token?.role === "Admin" || token?.role === "Seller"
         }
         return Boolean(token)
       }
@@ -23,5 +23,5 @@ export default withAuth(
 
   // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/post','/mypost','/settings/:path*','/order/:path*','/admin/:path*']
+  matcher: ['/post','/mypost','/myLikePost','/settings/:path*','/order/:path*','/admin/:path*']
 }

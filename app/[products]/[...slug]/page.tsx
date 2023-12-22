@@ -153,21 +153,24 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                     <FiPhoneCall className="fill-green text-white" />
                                     <span className="text-sm font-bold text-white">{data?.user?.phoneNumber}</span>
                                 </div>
-                                <div className="flex items-center mt-3">
-                                    <span className="w-[110px]">Số lượng</span>
-                                    <button disabled={quantity === 1} onClick={handleMinusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><HiMinus />
-                                    </button>
-                                    <input type="text" value={quantity} readOnly className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
-                                    <button disabled={quantity === data?.quantity} onClick={handlePlusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><GoPlus /></button>
-                                </div>
                                 {
-                                    data?.user?.role === 'Admin' 
-                                    && <div className="mt-3">
-                                        <Button onClick={() => {
-                                            router.push(`/order/checkout?itemKeys=${data?.id}&quantity=${quantity}`);
-                                            router.refresh();
-                                        }} type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
-                                    </div>
+                                    data?.user?.role === 'Admin'
+                                    &&
+                                    <>
+                                        <div className="flex items-center mt-3">
+                                            <span className="w-[110px]">Số lượng</span>
+                                            <button disabled={quantity === 1} onClick={handleMinusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><HiMinus />
+                                            </button>
+                                            <input type="text" value={quantity} readOnly className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
+                                            <button disabled={quantity === data?.quantity} onClick={handlePlusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><GoPlus /></button>
+                                        </div>
+                                        <div className="mt-3">
+                                            <Button onClick={() => {
+                                                router.push(`/order/checkout?itemKeys=${data?.id}&quantity=${quantity}`);
+                                                router.refresh();
+                                            }} type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
+                                        </div>
+                                    </>
                                 }
                                 <div className=" mt-6">
                                     <img width="100px" height="100px" className="mr-[15px] float-left" src="https://static.chotot.com/storage/images/tips/1_mobile.png" alt="" />
@@ -181,7 +184,6 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                     </section>
                 </> : <Loading />
             }
-
         </>
     )
 }

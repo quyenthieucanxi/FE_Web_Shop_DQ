@@ -18,10 +18,10 @@ export default function ProfilePage() {
     const { data: session, } = useSession();
     useEffect(() => {
         if (session && session.user) {
-            setFullName(session.user.name);
-            setSelectedAddress(session.user.address);
-            setPhone(session.user.phone);
-            setIntroduce(session.user.introduce);
+            setFullName(session.user.name || "");
+            setSelectedAddress(session.user.address || "");
+            setPhone(session.user.phone || "");
+            setIntroduce(session.user.introduce || "");
         }
     }, [session]);
     const axiosAuth = useAxiosAuth();
@@ -35,7 +35,7 @@ export default function ProfilePage() {
     const closeModal = () => {
         setIsModalOpen(false);
     };
-    const [selectedAddress, setSelectedAddress] = useState(session?.user?.address ?? "");
+    const [selectedAddress, setSelectedAddress] = useState(session?.user?.address || "");
     const onSubmitAddress = (address: string) => {
         setSelectedAddress(address);
         closeModal();

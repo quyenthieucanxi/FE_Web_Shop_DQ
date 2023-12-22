@@ -14,3 +14,8 @@ interface User {
     followedCount? : number;
     followingCount? : number;
 } 
+
+interface UserList {
+    totalUser: number;
+    userList : List<User> ;
+}

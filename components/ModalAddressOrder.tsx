@@ -145,8 +145,11 @@ export default function ModalAddressOrder({ isModalOpen, isCloseModal, onSubmitA
             onRequestClose={isCloseModal}
             style={customStyles}    
             contentLabel="Example Modal"
-            appElement={document.getElementById('modal_address')}
+            ariaHideApp={false}
         >
+            <div id="modal_address">
+                <ModalAddress isModalOpen={isOpenModalAddresses} isCloseModal={closeModalAddress} onSubmitAddress={onSubmitAddress} title="Địa chỉ nhận hàng" isShipping={true} initData={addressUpdate} onSubmitAdressByAddOrUpdate={onSubmitAdressByAddOrUpdate}/>
+            </div>
             <div className="flex items-center justify-between h-10 bg-slate-100 ">
                 <button onClick={isCloseModal} className="ml-[10px]" >
                     <IoIosClose className="w-8 h-8" />
@@ -218,7 +221,8 @@ export default function ModalAddressOrder({ isModalOpen, isCloseModal, onSubmitA
             <div className="px-6 mb-4">
                 <Button onClick={handleSelectClick} typeProp="button" className="mt-4" childern="Chọn" />
             </div>
-            <ModalAddress isModalOpen={isOpenModalAddresses} isCloseModal={closeModalAddress} onSubmitAddress={onSubmitAddress} title="Địa chỉ nhận hàng" isShipping={true} initData={addressUpdate} onSubmitAdressByAddOrUpdate={onSubmitAdressByAddOrUpdate}/>
+            
+            
         </Modal>
     )
 }

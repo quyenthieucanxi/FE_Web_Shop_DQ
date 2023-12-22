@@ -11,6 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import { useState } from 'react';
 import { IoCheckmark } from "react-icons/io5";
 import { TiDeleteOutline } from "react-icons/ti";
+import { usePathname, useRouter } from 'next/navigation';
 
 
 interface StickyHeadTableProps {
@@ -23,6 +24,8 @@ interface StickyHeadTableProps {
 
 
 export default function StickyHeadTable({ columns, rows, handleConfirm, handleUpdate, handleDelete }: StickyHeadTableProps) {
+    const router = useRouter();
+    const pathname = usePathname();
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [data, setData] = useState(rows || []);
@@ -34,6 +37,10 @@ export default function StickyHeadTable({ columns, rows, handleConfirm, handleUp
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+    const handleViewDetail = (rowId: string) => {
+        router.push(`${pathname}/${rowId}`)
+        router.refresh()
+    }
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer sx={{ maxHeight: 540 }}>
@@ -67,6 +74,13 @@ export default function StickyHeadTable({ columns, rows, handleConfirm, handleUp
                                                             <button className='bg-green-500 p-2 text-xs text-white flex items-center rounded gap-2' onClick={() => handleConfirm(row.id)}>
                                                                 Duyệt
                                                                 <IoCheckmark size={16} />
+                                                            </button>
+                                                        )
+                                                    }
+                                                    {
+                                                        column.id === 'update' && (
+                                                            <button className='bg-green-500 p-2 text-xs text-white flex items-center rounded gap-2' onClick={() => handleViewDetail(row.id)}>
+                                                                Xem chi tiết
                                                             </button>
                                                         )
                                                     }

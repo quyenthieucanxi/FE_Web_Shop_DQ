@@ -59,7 +59,7 @@ export default function Login(props: Props) {
                     <Input label="username" type="text" text="Tên đăng nhập:"  ></Input>
                     <Input label="password" type="password" text="Mật khẩu:" ></Input>
                     <div>
-                        <a className="text-blue-500 text-sm" href="">Quên mật khẩu?</a>
+                        <Link className="text-blue-500 text-sm" href="/forgetPassword">Quên mật khẩu?</Link>
                     </div>
                     <button
                         type="submit"

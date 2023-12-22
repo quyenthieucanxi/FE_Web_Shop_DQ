@@ -25,7 +25,7 @@ export const ValidateInput = (text: string =" ", fieldName: string): string | nu
   };
   export const ValidateInputQuantity = (text: string =" ", fieldName: string): string | null => {
     const inputTrim  = text.trim()
-    if ( Number.parseInt(inputTrim) < 0 ) {
+    if ( Number.parseInt(inputTrim) <= 0 ) {
       return `${fieldName} không hợp lệ.`;
     }
     return null; 

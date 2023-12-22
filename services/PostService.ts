@@ -28,8 +28,11 @@ export const GetAll = async () => {
     return res.data;
 }
 
-export const UpdateStatus = async (id: string, status) => {
+export const UpdateStatus = async (id: string, status: string) => {
     const res = await axios.put(`/api/Post/UpdateStatus/${id}?status=${status}`)
     return res.data;
 }
-
+export const Update = async (model : Object) => {
+    const res = await axios.put(`/api/Post/Update`,model)
+    return res.data;
+}

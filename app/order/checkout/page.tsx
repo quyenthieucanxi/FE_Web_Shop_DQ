@@ -154,6 +154,9 @@ export default function OrderPage() {
             <div id="modal_AddressOrder">
                 <ModalAddressOrder isModalOpen={isModalAddressOpen} isCloseModal={closeModalAddress} onSubmitAddress={onSubmitAddress} onSubmitAddressShipping={onSubmitAddressShipping} />
             </div>
+            <div id="modal_address">
+
+            </div>
             <div className="bg-white p-4">
                 <h4 className="font-bold text-lg ">Xác nhận đơn hàng</h4>
                 <div className="flex justify-between border-t py-4 mt-4">

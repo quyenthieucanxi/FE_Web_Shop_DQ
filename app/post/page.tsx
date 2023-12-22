@@ -11,13 +11,11 @@ import { ValidateInput, ValidateInputPrice, ValidateInputQuantity } from "@/util
 import Loading from "@/components/Loading";
 import Toast from "@/components/Toast";
 import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
 import axios from "@/libs/axios";
 import { makeSlug } from "@/utils/StringHelper";
 import ModalAddress from "@/components/ModalAddress";
 
 export default function PostPage() {
-    const router = useRouter();
     const axiosAuth = useAxiosAuth();
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(true);
@@ -59,7 +57,6 @@ export default function PostPage() {
             const imageFile = inputFileRef.current.files[0];
             const formDataImg = new FormData();
             formDataImg.append("formFile", imageFile);
-            console.log(formDataImg);
             const res = await axios.post("/api/File/Upload", formDataImg, {
                 headers: { "Content-Type": "multipart/form-data" },
             })
@@ -150,7 +147,6 @@ export default function PostPage() {
         setSelectedAddress(address);
         closeModalAddress();
     }
-    console.log(errors)
     return (
         <>
             {

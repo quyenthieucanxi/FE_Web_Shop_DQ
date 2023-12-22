@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import { GetAllCategory } from "@/services/CategoryService";
 
 
-
+//Modal.setAppElement('#modal_cat');
 const customStyles = {
     overlay: {
         position: 'fixed',
@@ -46,12 +46,13 @@ export default function ModalCat ( {isModalOpen, isCloseModal, onSelectCategory 
         fetchCategories();
     }, []);
     return (
+        <div id="modal_cat">
             <Modal
                 isOpen={isModalOpen}
                 onRequestClose={isCloseModal}
                 style={customStyles}
                 contentLabel="Example Modal"
-                appElement={document.getElementById('modal_cat')}
+                ariaHideApp={false}
             >
                 <div className="flex items-center justify-between h-10 bg-slate-100 ">
                     <button onClick={isCloseModal} className="ml-[10px]" >
@@ -73,5 +74,6 @@ export default function ModalCat ( {isModalOpen, isCloseModal, onSelectCategory 
                     </ul>
                 </div>
             </Modal>
+        </div>        
     )
 }
