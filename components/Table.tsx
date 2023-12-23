@@ -20,10 +20,11 @@ interface StickyHeadTableProps {
     handleConfirm?: (rowId: string) => any;
     handleUpdate?: (rowId: string) => any;
     handleDelete?: (rowId: string) => any;
+    onSelect?: (rowId: string) => any;
 }
 
 
-export default function StickyHeadTable({ columns, rows, handleConfirm, handleUpdate, handleDelete }: StickyHeadTableProps) {
+export default function StickyHeadTable({ columns, rows, handleConfirm, handleUpdate,onSelect, handleDelete }: StickyHeadTableProps) {
     const router = useRouter();
     const pathname = usePathname();
     const [page, setPage] = useState(0);
@@ -90,6 +91,11 @@ export default function StickyHeadTable({ columns, rows, handleConfirm, handleUp
                                                                 Huỷ
                                                                 <TiDeleteOutline size={16} />
                                                             </button>
+                                                        )
+                                                    }
+                                                    {
+                                                        column.id === 'checkbox' && (
+                                                            <input  onChange={() => onSelect(row.id)} name='checkbox' type="checkbox" />
                                                         )
                                                     }
                                                     {

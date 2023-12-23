@@ -248,7 +248,7 @@ const Header = () => {
                                         <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Khác</div>
                                         <div className="flex flex-col hover:cursor-pointer">
                                             {
-                                                session?.user?.role === "Admin"
+                                                (session?.user?.role === "Admin" || session?.user?.role === "Seller")
                                                 && <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                                     <div className="rounded-full bg-gray-300 p-1">
                                                         <MdDashboard className="text-gray-500" size="16px" />

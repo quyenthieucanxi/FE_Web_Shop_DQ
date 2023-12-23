@@ -1,11 +1,13 @@
 import { getServerSession } from "next-auth";
 import { options } from "../api/auth/[...nextauth]/options";
 import LabTabs from "@/components/LabTabsOrder";
+import { redirect } from "next/navigation";
 
 
 
 export default async function OrderPage () {
     const session = await  getServerSession(options);
+
     return (
         <div>
             <div className="mx-auto max-w-[960px] bg-white mt-20 py-3 px-6 ">
@@ -22,7 +24,7 @@ export default async function OrderPage () {
                 </div>
             </div>
             <div className='mx-auto max-w-[960px] bg-white border-t h-screen'>
-                <LabTabs tabs={["CHỜ XÁC NHẬN","ĐANG XỬ LÝ","ĐANG GIAO","ĐÃ GIAO"]} />
+                <LabTabs tabs={["CHỜ XÁC NHẬN","XÁC NHẬN","ĐANG XỬ LÝ","ĐANG GIAO","ĐÃ GIAO","HUỶ"]} />
             </div>
         </div>
     )

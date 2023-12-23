@@ -58,7 +58,7 @@ export default function LabTabs(props: Props) {
                                     {
                                         data?.orderList.map((order) => {
                                             return (
-                                                <Order order={order} />
+                                                <Order key={order.id} order={order} />
                                             );
                                         })
                                     }

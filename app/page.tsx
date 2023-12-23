@@ -10,14 +10,12 @@ import Toast from "@/components/Toast";
 const Slider = dynamic(() => import("@/components/Slider"), { ssr: false });
 
 
-
-
 export default async function Home() {
-  const session = await getServerSession(options)
-  if (!!!session?.user )
-  {
-    signIn();
-  }
+  // const session = await getServerSession(options)
+  // if (!!!session?.user )
+  // {
+  //   signIn();
+  // }
   return (
     <main >
       <section>
