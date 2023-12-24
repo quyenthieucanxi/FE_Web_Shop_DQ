@@ -41,11 +41,11 @@ export default async function Home() {
           <h2 className="font-bold text-lg">DQ Shop, Rao Vặt Trực Tuyến Của Người Việt</h2>
           <div className="text-[12px]">
 
-            <p>Chợ Tốt chính thức gia nhập thị trường Việt Nam vào đầu năm 2012, với mục đích tạo ra cho bạn một kênh rao vặt trung gian, kết nối người mua với người bán lại với nhau bằng những giao dịch cực kỳ đơn giản, tiện lợi, nhanh chóng, an toàn, mang đến hiệu quả bất ngờ.</p>
+            <p>DQ Shop chính thức gia nhập thị trường Việt Nam vào đầu năm 2012, với mục đích tạo ra cho bạn một kênh rao vặt trung gian, kết nối người mua với người bán lại với nhau bằng những giao dịch cực kỳ đơn giản, tiện lợi, nhanh chóng, an toàn, mang đến hiệu quả bất ngờ.</p>
 
-            <p>Đến nay, Chợ Tốt tự hào là Website rao vặt được ưa chuộng hàng đầu Việt Nam. Hàng ngàn món hời từ <a href="">Bất động sản, Nhà cửa</a>, <a href="">Xe cộ</a>, <a href="">Đồ điện tử</a>, Thú cưng, Vật dụng cá nhân... đến <a href="">tìm việc làm</a>, thông tin tuyển dụng, các dịch vụ - du lịch được đăng tin, rao bán trên Chợ Tốt.</p>
+            <p>Đến nay, DQ Shop tự hào là Website rao vặt được ưa chuộng hàng đầu Việt Nam. Hàng ngàn món hời từ <a href="">Bất động sản, Nhà cửa</a>, <a href="">Xe cộ</a>, <a href="">Đồ điện tử</a>, Thú cưng, Vật dụng cá nhân... đến <a href="">tìm việc làm</a>, thông tin tuyển dụng, các dịch vụ - du lịch được đăng tin, rao bán trên DQ Shop.</p>
 
-            <p>Với Chợ Tốt, bạn có thể dễ dàng mua bán, trao đổi bất cứ một loại mặt hàng nào, dù đó là đồ cũ hay đồ mới với nhiều lĩnh vực:</p>
+            <p>Với DQ Shop, bạn có thể dễ dàng mua bán, trao đổi bất cứ một loại mặt hàng nào, dù đó là đồ cũ hay đồ mới với nhiều lĩnh vực:</p>
 
             <p><strong>Bất động sản:</strong> Cho thuê, Mua bán <a href="">nhà đất</a>, <a href="">căn hộ chung cư</a>, <a href="">văn phòng mặt bằng kinh doanh</a>, phòng trọ đa dạng về diện tích, vị trí</p>
 
@@ -57,19 +57,19 @@ export default async function Home() {
 
             <p>﻿<a href="" target="_blank"><strong>Vật nuôi, thú cưng</strong></a> đa chủng loại: <a href="">gà</a>, <a href="">chó</a>&nbsp;(<a href="">chó phốc sóc</a>, <a href="">chó pug</a>, <a href="">chó poodle</a>...), <a href="">chim</a>, mèo (<a href="">mèo anh lông ngắn</a>, <a href="">mèo munchkin</a>...), cá, hamster giá cực tốt.</p>
 
-            <p><strong>Tuyển dụng, việc làm</strong> với hàng triệu công việc hấp dẫn, phù hợp tại <a href="">Việc Làm Tốt</a> - Kênh tuyển dụng hiệu quả, uy tín được phát triển bởi Chợ Tốt.</p>
+            <p><strong>Tuyển dụng, việc làm</strong> với hàng triệu công việc hấp dẫn, phù hợp tại <a href="">Việc Làm Tốt</a> - Kênh tuyển dụng hiệu quả, uy tín được phát triển bởi DQ Shop.</p>
 
             <p>﻿<a href=""><strong>Dịch vụ</strong></a><strong>, <a href="">du lịch</a></strong>: khách sạn, vé máy bay, vé tàu, vé xe, tour du lịch và các voucher du lịch... uy tín, chất lượng.</p>
 
             <p>﻿<a href="" target="_blank"><strong>Đồ ăn, thực phẩm</strong></a>: các món ăn được chế biến thơm ngon, hấp dẫn, thực phẩm tươi sống, an toàn &amp; giá cả hợp lý.</p>
 
-            <p>Và còn rất nhiều mặt hàng khác nữa đã và đang được rao bán tại Chợ Tốt.</p>
+            <p>Và còn rất nhiều mặt hàng khác nữa đã và đang được rao bán tại DQ Shop.</p>
 
-            <p>Mỗi người trong chúng ta đều có những sản phẩm đã qua sử dụng và không cần dùng tới nữa. Vậy còn chần chừ gì nữa mà không để nó trở nên giá trị hơn với người khác. Rất đơn giản, bạn chỉ cần chụp hình lại, mô tả cụ thể về sản phẩm và sử dụng ứng dụng Đăng tin miễn phí của Chợ Tốt là đã có thể đến gần hơn với người cần nó.</p>
+            <p>Mỗi người trong chúng ta đều có những sản phẩm đã qua sử dụng và không cần dùng tới nữa. Vậy còn chần chừ gì nữa mà không để nó trở nên giá trị hơn với người khác. Rất đơn giản, bạn chỉ cần chụp hình lại, mô tả cụ thể về sản phẩm và sử dụng ứng dụng Đăng tin miễn phí của DQ Shop là đã có thể đến gần hơn với người cần nó.</p>
 
-            <p>Không những thế, website chotot.com còn cung cấp cho bạn thông tin về giá cả các mặt hàng để bạn có thể tham khảo. Đồng thời, thông qua <a href="https://www.chotot.com/kinh-nghiem/">Blog kinh nghiệm</a>, Chợ Tốt sẽ tư vấn, chia sẻ cho bạn những thông tin bổ ích, bí quyết, mẹo vặt giúp bạn có những giao dịch mua bán an toàn, đảm bảo. Chợ Tốt cũng sẵn sàng hỗ trợ bạn trong mọi trường hợp cần thiết.</p>
+            <p>Không những thế, website chotot.com còn cung cấp cho bạn thông tin về giá cả các mặt hàng để bạn có thể tham khảo. Đồng thời, thông qua <a href="https://www.chotot.com/kinh-nghiem/">Blog kinh nghiệm</a>, DQ Shop sẽ tư vấn, chia sẻ cho bạn những thông tin bổ ích, bí quyết, mẹo vặt giúp bạn có những giao dịch mua bán an toàn, đảm bảo. DQ Shop cũng sẵn sàng hỗ trợ bạn trong mọi trường hợp cần thiết.</p>
 
-            <p>Chúc các bạn có những trải nghiệm mua bán tuyệt vời trên Chợ Tốt.</p>
+            <p>Chúc các bạn có những trải nghiệm mua bán tuyệt vời trên DQ Shop.</p>
           </div>
         </div>
       </section>

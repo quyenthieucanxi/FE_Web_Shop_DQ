@@ -7,7 +7,6 @@ import { redirect } from "next/navigation";
 
 export default async function OrderPage () {
     const session = await  getServerSession(options);
-
     return (
         <div>
             <div className="mx-auto max-w-[960px] bg-white mt-20 py-3 px-6 ">

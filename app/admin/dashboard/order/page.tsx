@@ -31,7 +31,7 @@ const columns: Column[] = [
     { id: ['product', 'price'], label: 'Giá', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
     { id: 'quantity', label: 'Số lượng', minWidth: 100 },
     { id: 'totalPrice', label: 'Thành tiền', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
-    { id: 'status', label: 'Trạng thái', minWidth: 100 },
+    { id: 'status', label: 'Trạng thái', minWidth: 150 },
     { id: 'note', label: 'Chú thích', minWidth: 100 },
     { id: 'payment', label: 'Thanh toán', minWidth: 160 },
     { id: 'recipientName', label: 'Thông tin người nhận', minWidth: 160 },

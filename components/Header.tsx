@@ -1,6 +1,7 @@
 'use client';
 import { IoMenuSharp } from 'react-icons/io5';
 import { AiOutlineSearch } from 'react-icons/ai';
+import { CiShop } from "react-icons/ci";
 import { IoMdNotificationsOutline, IoMdChatbubbles, IoMdSettings } from 'react-icons/io';
 import { BiMessageAltDetail, BiSolidHelpCircle } from 'react-icons/bi';
 import { HiOutlineShoppingBag } from 'react-icons/hi';
@@ -114,7 +115,7 @@ const Header = () => {
         // matchedCategory ? router.push(`/${matchedCategory?.categoryPath}?search=${search}`) : router.push(`/${categories[0]?.categoryPath}?search=${search}`) 
         // router.refresh()
         if (matchedCategory) {
-            
+
             router.push(`/${matchedCategory?.categoryPath}?search=${search}`);
         } else {
             router.push(`/${categories[0]?.categoryPath}?search=${search}`);
@@ -173,7 +174,7 @@ const Header = () => {
                 <IoMdNotificationsOutline size={20} />
                 <BiMessageAltDetail size={20} />
                 <div className="relative group">
-                    <Link  href="/order" className="relative cursor-pointer">
+                    <Link href="/order" className="relative cursor-pointer">
                         <HiOutlineShoppingBag size={20} />
                     </Link>
                 </div>
@@ -199,7 +200,7 @@ const Header = () => {
                                         <div className="flex gap-3 items-center">
                                             <div className="flex items-center justify-center rounded-lg h-12 w-12 overflow-hidden border-2 border-slate-600">
                                                 <img className="w-full object-cover"
-                                                    src={session.user?.sub === "google" ? session.user.image : user?.data?.avatarUrl ?? `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=top&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;h=100&amp;ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2Mjk2MTgwNw&amp;ixlib=rb-1.2.1&amp;q=80&amp;utm_campaign=api-credit&amp;utm_medium=referral&amp;utm_source=unsplash_source&amp;w=100`} 
+                                                    src={session.user?.sub === "google" ? session.user.image : user?.data?.avatarUrl ?? `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=top&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;h=100&amp;ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2Mjk2MTgwNw&amp;ixlib=rb-1.2.1&amp;q=80&amp;utm_campaign=api-credit&amp;utm_medium=referral&amp;utm_source=unsplash_source&amp;w=100`}
                                                     alt="Profile" />
                                             </div>
                                             <div>
@@ -244,6 +245,19 @@ const Header = () => {
                                                 </div>
                                                 <span className="text-sm">Tin đã được lưu</span>
                                             </Link>
+                                        </div>
+                                        <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Dịch vụ</div>
+                                        <div className="flex flex-col hover:cursor-pointer">
+                                            {
+                                                session?.user?.role === "User" &&
+                                                <Link href="/shop" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300" >
+                                                    <div className="rounded-full bg-gray-300 p-1">
+                                                        <CiShop className="text-gray-500" size="16px" />
+                                                    </div>
+                                                    <span className="text-sm">Tạo cửa hàng</span>
+                                                </Link>
+                                            }
+
                                         </div>
                                         <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Khác</div>
                                         <div className="flex flex-col hover:cursor-pointer">
@@ -363,9 +377,7 @@ const Header = () => {
                                     </div>
                                 </div>
                             )}
-
                         </>
-
                 }
             </div>
             <div className='flex justify-center'>

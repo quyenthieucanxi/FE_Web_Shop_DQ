@@ -23,5 +23,5 @@ export default withAuth(
 
   // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/post','/mypost','/myLikePost','/settings/:path*','/order/:path*','/admin/:path*']
+  matcher: ['/post','/mypost','/myLikePost','/order/:path*','/shop','/settings/:path*','/order/:path*','/admin/:path*']
 }

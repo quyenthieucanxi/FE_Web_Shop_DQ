@@ -14,7 +14,7 @@ import { FormatCurrencyVND } from "@/utils/StringHelper";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import Toast from "@/components/Toast";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 const Slider = dynamic(() => import("@/components/Slider"), { ssr: false });
@@ -128,7 +128,6 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                             }
                                         </button>
                                     </div>
-
                                 </div>
                                 <div className="mt-3">
                                     Số lượng còn: {data?.quantity}
@@ -154,7 +153,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                     <span className="text-sm font-bold text-white">{data?.user?.phoneNumber}</span>
                                 </div>
                                 {
-                                    data?.user?.role === 'Admin'
+                                    data?.user?.role === 'Seller'
                                     &&
                                     <>
                                         <div className="flex items-center mt-3">
