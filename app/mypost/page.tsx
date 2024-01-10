@@ -21,7 +21,7 @@ export default async function MyPost() {
                     </div>
                 </div>
             </div>
-            <div className='mx-auto max-w-[960px] bg-white border-t mb-5 h-screen'>
+            <div className='mx-auto max-w-[960px] bg-white border-t mb-5 h-screen max-h-[900px]  overflow-y-auto'>
                 <LabTabs tabs={["CHỜ DUYỆT","ĐANG HIỂN THỊ","HUỶ"]} />
             </div>
         </div>

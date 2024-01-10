@@ -53,7 +53,7 @@ export default function LabTabs(props: Props) {
                     props.tabs.map((tab, i) => {
                         return (
                             <TabPanel key={i} value={`${i + 1}`}>
-                                <div className='bg-gray-200 border-white border border-solid max-h-[900px] overflow-y-auto'>
+                                <div className='bg-gray-200 border-white border border-solid '>
                                     {
                                         data?.data?.postList.map((product) => {
                                             return (
