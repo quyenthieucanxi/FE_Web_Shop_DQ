@@ -1,10 +1,11 @@
 
 import type { Metadata } from 'next'
-import { Inter,Nunito_Sans } from 'next/font/google'
+import { Inter, Nunito_Sans } from 'next/font/google'
 import './globals.css'
 import Footer from '@/components/Footer'
 import AuthProvider from './context/AuthProvider'
 import QueryProvider from './context/QueryProvider'
+import HubProvider from './context/HubProvider'
 import Header from '@/components/Header'
 import { options } from './api/auth/[...nextauth]/options'
 
@@ -28,11 +29,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider >
-          <QueryProvider>
-          <Header />
-          {children}
-          <Footer />
-          </QueryProvider>
+          <HubProvider>
+            <QueryProvider>
+              <Header />
+              {children}
+              <Footer />
+            </QueryProvider>
+          </HubProvider>
         </AuthProvider>
       </body>
     </html>

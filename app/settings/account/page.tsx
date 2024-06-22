@@ -59,7 +59,7 @@ export default function AccountPage() {
         <div>
             <Toast />
             <div className="mx-auto max-w-[960px] mt-24">
-                <h1 className="mt-20 font-bold text-[20px]">Chỉnh sửa thông tin cá nhân</h1>
+                <h1 className="mt-20 font-bold text-[20px]">Chỉnh sửa thông tin tài khoản</h1>
                 <div className="grid md:grid-cols-[225px_auto] md:gap-3 mt-4">
                     <div className=" p-4 bg-white rounded">
                         <ul className="flex flex-col gap-4">

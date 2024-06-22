@@ -4,10 +4,12 @@ import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import { TabContext, TabPanel } from '@mui/lab';
 import { useEffect, useState } from 'react';
-import Order from './Order';
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth"
 import { useSession } from 'next-auth/react';
 import { OrderList } from '@/types/order';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import Order from './Order';
+import ModalOrderReview from './ModalOrderReview';
 
 interface Props {
     tabs: string[]
@@ -21,23 +23,50 @@ export default function LabTabs(props: Props) {
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
-    useEffect(() => {
-        const fetchData = async (status: string) => {
-            if (session) {
-                    await axiosAuth.get(`/api/Order/GetByStatus?status=${status}`)
-                    .then(res => {
-                        console.log(res.data.data);
-                        setData(res.data.data);
-                    }).catch((error) => {
-                        console.error('Error fetching data from the API', error);
-                    }
-                    )
-            }
+    const fetchDataOrders = async () => {
+        try {
+            const { data: res }: { data: Response } = await axiosAuth.get(`/api/Order/GetAll`)
+            return res.data
+        } catch (error) {
+            
         }
-        fetchData(props.tabs[Number.parseInt(value) - 1])
-    }, [value, session?.user?.accessToken]);
+    }
+    const fetchDataOrderByStatus = async (status: string) => {
+        try {
+            const { data: res }: { data: Response } = await axiosAuth.get(`/api/Order/GetByStatus?status=${status}`)
+            return res.data
+        } catch (error) {
+            
+        }
+            
+            
+    }
+    const { data: orders }: { data: OrderList } = useQuery({
+        queryKey: ['orders', value],
+        queryFn: value === '1' ? fetchDataOrders :  () => fetchDataOrderByStatus(props.tabs[Number.parseInt(value) - 1]),
+        placeholderData: keepPreviousData,
+        enabled: !!session?.user?.accessToken,
+    })
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+    const [orderReview, setOrderReview] = useState(null);
+    const handleOrderReview = (orderID :string ) => {
+        setOrderReview(orders.orderList?.find(order => order.id == orderID))
+        openModal()
+    }
+
     return (
-        <TabContext value={value}>
+        <>
+            <div>
+                <ModalOrderReview isModalOpen={isModalOpen} isCloseModal={closeModal} order={orderReview}  />
+            </div>
+            <TabContext value={value}>
             <Box sx={{ width: '100%' }}>
                 <Tabs
                     value={value}
@@ -47,7 +76,7 @@ export default function LabTabs(props: Props) {
                     aria-label="secondary tabs example"
                 >
                     {
-                        props.tabs.map((tab, i) => <Tab key={i} value={`${i + 1}`} label={tab} />)
+                        props.tabs.map((tab, i) => <Tab key={i} value={`${i + 1}`} label={tab + `${Number.parseInt(value) === (i + 1) ? " (" + orders?.totalOrder + ")" : " "}`} />)
                     }
                 </Tabs>
                 {
@@ -56,9 +85,9 @@ export default function LabTabs(props: Props) {
                             <TabPanel key={i} value={`${i + 1}`}>
                                 <div className='bg-gray-200 border-white border border-solid '>
                                     {
-                                        data?.orderList.map((order) => {
+                                        orders?.orderList.map((order) => {
                                             return (
-                                                <Order key={order.id} order={order} />
+                                                <Order key={order.id} order={order} openModal={handleOrderReview} />
                                             );
                                         })
                                     }
@@ -69,5 +98,7 @@ export default function LabTabs(props: Props) {
                 }
             </Box>
         </TabContext >
+        </>
+        
     )
 }

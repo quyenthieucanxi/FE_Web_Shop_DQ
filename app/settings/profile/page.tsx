@@ -15,12 +15,13 @@ import { useRouter } from "next/navigation";
 
 
 export default function ProfilePage() {
-    const { data: session, } = useSession();
+    const { data: session,update } = useSession();
     useEffect(() => {
         if (session && session.user) {
             setFullName(session.user.name || "");
             setSelectedAddress(session.user.address || "");
             setPhone(session.user.phone || "");
+            setUrl(session.user.url || "");
             setIntroduce(session.user.introduce || "");
         }
     }, [session]);
@@ -48,20 +49,25 @@ export default function ProfilePage() {
     const handleOnChangePhone = (e) => {
         setPhone(e.target.value)
     }
+    const [url, setUrl] = useState(session?.user?.url ?? "")
+    const handleOnChangeUrl = (e) => {
+        setUrl(e.target.value)
+    }
     const [introduce, setIntroduce] = useState(session?.user?.introduce ?? "")
     const handleOnChangeIntroduce = (e) => {
         setIntroduce(e.target.value)
     }
+
     const [isFormChanged, setIsFormChanged] = useState(false);
     useEffect(() => {
         const isChanged =
             fullName !== session?.user?.name ||
             phone !== session?.user?.phone ||
+            url !== session?.user?.url || 
             selectedAddress !== session?.user?.address ||
             introduce !== session?.user?.introduce;
         setIsFormChanged(isChanged);
-    }, [fullName, phone, introduce, session,selectedAddress]);
-
+    }, [fullName, phone, url, introduce, session,selectedAddress]);
     const handleSubmit = async () => {
         const body = {
             email: session?.user.email,
@@ -69,6 +75,7 @@ export default function ProfilePage() {
             phoneNumber: phone,
             address: selectedAddress,
             introduce: introduce,
+            url: url,
         }
         try {
             const res = await axiosAuth.put(`/api/User/UpdateInfo`, body)
@@ -82,6 +89,17 @@ export default function ProfilePage() {
                     draggable: true,
                     progress: undefined,
                     theme: "light",
+                })
+                await update({
+                    ...session,
+                    user: {
+                        ...session?.user,
+                        name: fullName,
+                        phone: phone,
+                        url: url,
+                        address: selectedAddress,
+                        introduce: introduce,
+                    }
                 })
             }
         }
@@ -119,6 +137,8 @@ export default function ProfilePage() {
                                     <Input label="phone" type="text" text="Số điện thoại" value={phone}
                                         onChange={handleOnChangePhone}
                                         classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
+                                    <Input label="url" type="text" text="Tên người dùng" value={url}
+                                        onChange={handleOnChangeUrl} />
                                 </div>
                                 <div onClick={openModal} className="border-[#cacaca] w-full h-12  rounded border border-solid mt-6 relative cursor-pointer ">
                                     <label className={` absolute top-[12px] left-[12px] cursor-text text-[#8c8c8c] text-sm capitalize after:content-['*'] after:ml-2 after:text-[#e5193b] ${selectedAddress ? "scale(.7143) translate-y-[-10px]" : ""} `} htmlFor="Địa chỉ">Địa chỉ</label>
@@ -130,7 +150,7 @@ export default function ProfilePage() {
                                 <div className="mt-4">
                                     <Input label="introduce" type="text" text="Giới thiệu bản thân" textarea={true} value={introduce}
                                         onChange={handleOnChangeIntroduce}
-                                        className="h-[110px]" classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
+                                        className="h-[110px]" />
                                 </div>
                                 <div className="mt-4">
                                     <button disabled={!isFormChanged} onClick={handleSubmit} className={`border border-solid rounded font-bold text-white text-sm py-2 px-4 ${!isFormChanged ? "bg-gray-400" : "bg-[#f80]"}  `}>

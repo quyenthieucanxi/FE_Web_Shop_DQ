@@ -8,6 +8,8 @@ import { CgDanger } from "react-icons/cg";
 import { FaCheck } from "react-icons/fa";
 import axios from "@/libs/axios";
 import { signIn } from "next-auth/react";
+import Toast from "./Toast";
+import { toast } from "react-toastify";
 
 export default function Register() {
     const [error, setError] = useState("");
@@ -23,29 +25,54 @@ export default function Register() {
         if (formData.get("checkPolicy")) {
             try {
                 const res = await axios.post("/api/Authentication/register", body);
-                setMessage(`Người dùng đã tạo & Mail xác minh tài khoản được gửi tới ${body.email} !`)
+                toast.success(`Người dùng đã tạo & Mail xác minh tài khoản được gửi tới ${body.email} !`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
+                //setMessage(`Người dùng đã tạo & Mail xác minh tài khoản được gửi tới ${body.email} !`)
             }
             catch (error) {
-                if (error.response) {
-                    setError(error.response.data.message.toString());
-                }
-                else if (error.request) {
-                    setError("Yêu cầu không hoàn thành:" + error.request.toString());
-                } else {
-                    setError("Lỗi khi gửi yêu cầu:" + error.message.toString());
-                }
+                toast.error(error.response.data.message.toString(), {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
             }
+        }
+        else {
+            toast.info("Vui lòng tích vào đồng ý", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
         }
     }
     return (
         <div className="flex justify-center items-center h-screen">
+            <Toast />
             <div className="bg-white p-8 rounded shadow-md w-96 ">
                 <div className="flex justify-center items-center my-2">
                     <img className="w-full" src="/images/logo.png" alt="logo" />
                 </div>
                 <h2 className="text-2xl font-semibold mb-4">Đăng ký tài khoản</h2>
                 <form onSubmit={HandleSubmit} className="space-y-4" >
-                    {
+                    {/* {
                         !!error
                             ?
                             <div className="flex items-center  mb-2 bg-red-300 p-4 gap-4">
@@ -65,7 +92,7 @@ export default function Register() {
                                     </div> :
                                     <></>
                             )
-                    }
+                    } */}
                     <Input label="username" type="text" text="Tên đăng nhập :" ></Input>
                     <Input label="email" type="text" text="Email:" ></Input>
                     <Input label="password" type="password" text="Mật khẩu:" ></Input>

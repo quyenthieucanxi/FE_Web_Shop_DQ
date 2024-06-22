@@ -13,7 +13,7 @@ interface Order {
     phone: string;
     addressShipping: string;
     user?: User;
-    product: Product;
+    products: List<Product>;
     createdTime: string;
     modifiedTime: string;
 }

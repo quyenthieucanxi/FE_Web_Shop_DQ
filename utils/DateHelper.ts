@@ -30,3 +30,18 @@ export const CalculateTimePassedAsync = (timeInput: string): string => {
             return ConvertToDDMMYYYY(timeInput);
         } 
 }
+export const ConvertToHourMinute = (timeInput : string) => {
+    const dateTime: Date = new Date(timeInput);
+    const minutes = dateTime.getMinutes();
+    return  `${dateTime.getHours()}:${ minutes < 10 ? '0' + minutes : minutes}`
+}
+export function parseDate(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('/').map(Number);
+    return new Date(year, month - 1, day); 
+}
+
+export function isSameDate(date1: Date, date2: Date): boolean {
+    return date1.getFullYear() === date2.getFullYear() &&
+           date1.getMonth() === date2.getMonth() &&
+           date1.getDate() === date2.getDate();
+}

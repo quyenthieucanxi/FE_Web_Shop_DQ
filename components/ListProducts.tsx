@@ -76,7 +76,7 @@ export default function ListProducts({ pagination = false, page, catPath, search
         getNextPageParam: (_, pages) => pages.length + 1,
 
     });
-    const { data: dataQuery, isPlaceholderData } = useQuery({
+    const { data: dataQuery } = useQuery({
         queryKey: ['page', page ? Number.parseInt(page) : 1, catPath,search, orderByDirection],
         queryFn: () => fetchData((page ? Number.parseInt(page) : 1), catPath,search, orderByDirection),
         placeholderData: keepPreviousData,

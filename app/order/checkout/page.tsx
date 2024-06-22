@@ -1,5 +1,5 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { CiLocationOn } from "react-icons/ci";
 import { MdEventNote } from "react-icons/md";
@@ -14,12 +14,14 @@ import { toast } from "react-toastify";
 import Toast from "@/components/Toast";
 
 
-export default function OrderPage() {
+export default function CheckoutOrderPage() {
     const axiosAuth = useAxiosAuth()
     const { data: session } = useSession()
+    const router = useRouter()
     const searchParams = useSearchParams()
     const itemsKeys = searchParams.get("itemKeys")
     const quantity = Number.parseInt(searchParams.get("quantity"))
+
 
     const [note, setNote] = useState("")
     const onChangeNote = (e) => {
@@ -116,36 +118,57 @@ export default function OrderPage() {
     }
     const totalPrice = quantity * Number.parseInt(post?.price) + fee;
     const handleOrder = async () => {
-        try {
-            const res = await axiosAuth.post(`/api/Order/Create`, {
-                productId: post?.id,
-                addressShippingID: addressDefaut?.id,
-                quantity: quantity,
-                totalPrice: totalPrice,
-                payment: selectedPayment,
-                note: note,
-            })
-            toast.success("Đặt hàng thành công", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            })
-        } catch (error) {
-            toast.error(error.response.data.message, {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            })
+        const order = {
+            productId: post?.id,
+            addressShippingID: addressDefaut?.id,
+            quantity: quantity,
+            totalPrice: totalPrice,
+            payment: "Chờ thanh toán",
+            note: note,
+        }
+        if (selectedPayment === "Thanh toán khi nhận hàng") {
+            try {
+                const res = await axiosAuth.post(`/api/Order/Create`, order)
+                toast.success("Đặt hàng thành công", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
+            } catch (error) {
+                toast.error(error.response?.data.message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
+            }
+        }
+        else {
+            try {
+                const res = await axiosAuth.post(`/api/Order/CreateUrlPayment`,order)
+                const response : Response = res.data
+                router.push(response.data.toString())
+            } catch (error) {   
+                toast.error(error.response?.data.message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
+            }
         }
     }
     return (
@@ -241,13 +264,13 @@ export default function OrderPage() {
                     </div>
                     <div className="flex justify-between items-center gap-2 mb-3">
                         <div className="w-[20px]">
-                            <label htmlFor="payment-MoMo" className="relative w-full h-20px cursor-pointer">
-                                <input onChange={onChangePayment} className=" w-0 h-0 invisible" type="radio" name="payment" id="payment-MoMo" checked={selectedPayment === "Thanh toán bằng ví MoMo"} value="Thanh toán bằng ví MoMo" />
-                                <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedPayment === "Thanh toán bằng ví MoMo" ? "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : ""} `} >
+                            <label htmlFor="payment-VNPay" className="relative w-full h-20px cursor-pointer">
+                                <input onChange={onChangePayment} className=" w-0 h-0 invisible" type="radio" name="payment" id="payment-VNPay" checked={selectedPayment === "Thanh toán bằng VNPay"} value="Thanh toán bằng VNPay" />
+                                <span className={`text-[#f80] bg-[#f4f4f4] border-[#c0c0c0] border border-solid absolute top-0 rounded-[100%] h-[20px] w-[20px] ${selectedPayment === "Thanh toán bằng VNPay" ? "bg-current  after:content-[''] after:absolute after:top-[5px] after:left-[5px] after:w-[8px] after:h-2 after:bg-white after:rounded-[100%]" : ""} `} >
                                 </span>
                             </label>
                         </div>
-                        <div className="flex-1 text-sm">Thanh toán bằng ví MoMo</div>
+                        <div className="flex-1 text-sm">Thanh toán bằng VNPay</div>
                     </div>
 
                     {/* <button className=" text-blue-500 font-bold">

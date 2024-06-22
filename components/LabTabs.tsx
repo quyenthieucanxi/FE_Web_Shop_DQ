@@ -7,9 +7,12 @@ import { useEffect, useState } from 'react';
 import Product from './Product';
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth"
 import { useSession } from 'next-auth/react';
+import axios from '@/libs/axios';
 
 interface Props {
     tabs: string[]
+    typeDisplay: string,
+    ByUrl: string
 }
 
 export default function LabTabs(props: Props) {
@@ -24,8 +27,15 @@ export default function LabTabs(props: Props) {
         const fetchData = async (status: string) => {
             if (session) {
                 try {
-                    const res = await axiosAuth.get(`/api/Post/GetByStatus?status=${status}`)
-                    setData(res.data);
+                    if (props.ByUrl.length > 0)
+                    {
+                        const res = await axios.get(`/api/Post/GetByStatusByUrl?url=${props.ByUrl}&status=${status}`)
+                        setData(res.data);
+                    }
+                    else {
+                        const res = await axiosAuth.get(`/api/Post/GetByStatus?status=${status}`)
+                        setData(res.data);
+                    } 
                 } catch (error) {
                     console.error('Error fetching data from the API', error);
                 }
@@ -53,11 +63,11 @@ export default function LabTabs(props: Props) {
                     props.tabs.map((tab, i) => {
                         return (
                             <TabPanel key={i} value={`${i + 1}`}>
-                                <div className='bg-gray-200 border-white border border-solid '>
+                                <div className={` border-white border border-solid  ${props.typeDisplay === "row" ? "grid grid-cols-3 gap-2" : ""} `}  >
                                     {
                                         data?.data?.postList.map((product) => {
                                             return (
-                                                <Product key={product.id} product={product} typeDisplay="col" />
+                                                <Product key={product.id} product={product} typeDisplay={props.typeDisplay} />
                                             );
                                         })
                                     }

@@ -31,17 +31,19 @@ function removeDiacriticsAndConvert(inputStr) {
 
     return removedDiacriticsStr;
 }
-export const makeSlug = (inputStr: string) =>  {
-     // Chuyển đổi chữ có dấu thành chữ không dấu
-     let slug = removeDiacriticsAndConvert(inputStr);
+export const makeSlug = (inputStr: string) => {
+    // Loại bỏ các ký tự đặc biệt không mong muốn từ chuỗi đầu vào
+    const sanitizedStr = inputStr.replace(/[^a-zA-Z0-9\s]/g, '');
 
-     // Chuyển đổi thành chữ thường và thay thế khoảng trắng bằng dấu gạch ngang
-     slug = slug.toLowerCase().replace(/\s+/g, '-');
- 
-     return slug;
+    // Chuyển đổi chữ có dấu thành chữ không dấu và loại bỏ các ký tự không mong muốn
+    let slug = removeDiacriticsAndConvert(sanitizedStr);
+    // Chuyển đổi thành chữ thường và thay thế khoảng trắng bằng dấu gạch ngang
+    slug = slug.toLowerCase().replace(/\s+/g, '-');
+
+    return slug;
 }
 
- export const getBefore = (inputString, char) => {
+export const getBefore = (inputString, char) => {
     var index = inputString.indexOf(char);
     if (index !== -1) {
         return inputString.substring(0, index);

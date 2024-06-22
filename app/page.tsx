@@ -7,15 +7,10 @@ import TabCategory from "@/components/TabCategrory";
 import ListProducts from "@/components/ListProducts";
 import Toast from "@/components/Toast";
 
-const Slider = dynamic(() => import("@/components/Slider"), { ssr: false });
+const Slider = dynamic(() => import("@/components/Slider"), { ssr: true });
 
 
 export default async function Home() {
-  // const session = await getServerSession(options)
-  // if (!!!session?.user )
-  // {
-  //   signIn();
-  // }
   return (
     <main >
       <section>

@@ -23,7 +23,7 @@ export default async function OrderPage () {
                 </div>
             </div>
             <div className='mx-auto max-w-[960px] bg-white border-t h-screen max-h-[900px] overflow-y-auto'>
-                <LabTabs tabs={["CHỜ XÁC NHẬN","XÁC NHẬN","ĐANG XỬ LÝ","ĐANG GIAO","ĐÃ GIAO","HUỶ"]} />
+                <LabTabs tabs={["TẤT CẢ","CHỜ XÁC NHẬN","XÁC NHẬN","ĐANG XỬ LÝ","ĐANG GIAO","ĐÃ GIAO","HUỶ","ĐÁNH GIÁ"]} />
             </div>
         </div>
     )

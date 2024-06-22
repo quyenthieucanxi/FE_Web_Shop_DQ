@@ -11,7 +11,7 @@ import TableRow from '@mui/material/TableRow';
 import { useState } from 'react';
 import { IoCheckmark } from "react-icons/io5";
 import { TiDeleteOutline } from "react-icons/ti";
-import { usePathname, useRouter } from 'next/navigation';
+import { RedirectType, redirect, usePathname, useRouter } from 'next/navigation';
 
 
 interface StickyHeadTableProps {
@@ -40,7 +40,13 @@ export default function StickyHeadTable({ columns, rows, handleConfirm, handleUp
     };
     const handleViewDetail = (rowId: string) => {
         router.push(`${pathname}/${rowId}`)
-        router.refresh()
+    }
+    const  getValueFromData = (row: any, id: string | string[]): any => {
+        if (Array.isArray(id)) {
+            return id.reduce((obj, key) => (obj && obj[key] !== 'undefined') ? obj[key] : undefined, row);
+        } else {
+            return row[id];
+        }
     }
     return (
         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -66,8 +72,7 @@ export default function StickyHeadTable({ columns, rows, handleConfirm, handleUp
                                 return (
                                     <TableRow hover role="checkbox" tabIndex={-1} key={row.id} >
                                         {columns.map((column) => {
-                                            const columnId = Array.isArray(column.id) ? column.id : [column.id];
-                                            const value = columnId.reduce((acc, curr) => acc?.[curr], row);
+                                            const value = getValueFromData(row, column.id)
                                             return (
                                                 <TableCell key={column.id} align={column.align}>
                                                     {

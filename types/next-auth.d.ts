@@ -11,6 +11,7 @@ declare module "next-auth" {
             address: string;
             image: string;
             introduce: string,
+            url?: string;
             accessToken: string;
             refreshToken: string;
             role?: string;
@@ -26,6 +27,7 @@ declare module "next-auth/jwt" {
         address: string;
         image: string;
         introduce: string,
+        url?: string;
         accessToken: string;
         refreshToken: string;
         role?: string;

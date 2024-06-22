@@ -73,7 +73,7 @@ export default function UpdatePost({ params }: { params: { id: string[] } }) {
                     urlImage: res.data.data.url,
                 })
             }
-            const res =  await Update(form);
+            await Update(form);
             queryClient.invalidateQueries({ queryKey: ["id", params.id[0]] });
             toast.success("Cập nhập thành công", {
                 position: "top-right",
@@ -98,7 +98,6 @@ export default function UpdatePost({ params }: { params: { id: string[] } }) {
             })
         }
     }
-    console.log(form)
     return (
         isSuccess ?
             <div className=" mx-auto mt-5 w-[700px]">

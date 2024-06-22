@@ -19,19 +19,24 @@ import { FormEvent, useEffect, useRef, useState } from 'react';
 import useAxiosAuth from '@/libs/hooks/useAxiosAuth';
 import { CheckUrl } from '@/utils/TestHelper';
 import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation'
 import { GetAllCategory } from '@/services/CategoryService';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
 import { makeSlug } from '@/utils/StringHelper';
+import axios from '@/libs/axios';
+import { useHub } from '@/app/context/HubProvider';
 
 
 
 const Header = () => {
+    const { data: session, update } = useSession();
+    const { connection } = useHub();
+    const queryClient = useQueryClient()
     const router = useRouter();
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isAccountDropdownOpen, setAccountDropdownOpen] = useState(false);
+    const [isNotifyDropdownOpen,setNotifyDropdownOpen] = useState(false);
     const [user, setUser] = useState(null);
-    const [categories, setCategories] = useState([]);
-    const { data: session, update } = useSession();
     const containerRef = useRef();
     const handleMouseEnter = () => {
         setDropdownOpen(true);
@@ -44,14 +49,37 @@ const Header = () => {
 
         setAccountDropdownOpen(!isAccountDropdownOpen)
     };
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            const res = await GetAllCategory();
-            setCategories(res.data)
-        };
-        fetchCategories()
-    }, []);
+    const fetchCategories = async () => {
+        const res = await GetAllCategory();
+        return res.data
+    };
+    const { data: dataCategories, status: statusCategories } = useQuery({
+        queryKey: ['categoreies'],
+        queryFn: fetchCategories,
+        placeholderData: keepPreviousData
+    })
+    const fetchCountFollower = async () => {
+        const { data: response }: { data: Response } = await axios.get(`/api/Friendship/CountFollower/${user?.data?.url}`)
+        return response.data
+    }
+    const { data: countFollower } = useQuery({
+        queryKey: ["countFollower"],
+        queryFn: fetchCountFollower,
+        placeholderData: keepPreviousData,
+        enabled: !!user,
+    }
+    )
+    const fetchCountFollowing = async () => {
+        const { data: response }: { data: Response } = await axios.get(`/api/Friendship/CountFollowing/${user?.data?.url}`)
+        return response.data
+    }
+    const { data: countFollowing } = useQuery({
+        queryKey: ["countFollowing"],
+        queryFn: fetchCountFollowing,
+        placeholderData: keepPreviousData,
+        enabled: !!user,
+    }
+    )
     useEffect(() => {
         const handleAccountDropdownOutsideClick = (event: MouseEvent) => {
             const accountDropdown = document.getElementById('menu-account');
@@ -68,6 +96,40 @@ const Header = () => {
         };
     }, []);
     const axiosAuth = useAxiosAuth();
+    // const fetchDataMyInfo = async () => {
+    //     const res = await axiosAuth.get("/api/User/GetMyInfo");
+    //     return res.data ;
+    // }
+    // const { data : dataMyInfo, status } = useQuery({
+    //     queryKey: ['myInfo'],
+    //     queryFn:  fetchDataMyInfo,
+    //     enabled: !!session?.user.accessToken,
+    //     placeholderData: keepPreviousData
+    // })
+
+    const countChatsIsNotRead = async () => {
+        const { data: response }: { data: Response } = await axiosAuth.get(`/api/Chats/CountChatsNotIsRead`)
+        return response.data
+    }
+    const { data: countChats }: { data: number } = useQuery({
+        queryKey: ["countChatsIsNotRead"],
+        queryFn: countChatsIsNotRead,
+        placeholderData: keepPreviousData,
+        enabled: !!session?.user?.accessToken
+    }
+    )
+    useEffect(() => {
+        if (connection && session?.user?.accessToken) {
+            connection.start()
+                .then(result => {
+                    console.log('Connected!');
+                })
+                .catch(e => console.log('Connection failed:', e));
+            connection.on("ReceiveMessage", (url, message) => {
+                queryClient.invalidateQueries({ queryKey: ["countChatsIsNotRead"] });
+            });
+        }
+    }, [connection, session?.user?.accessToken]);
     useEffect(() => {
         const fetchData = async () => {
             if (session) {
@@ -84,43 +146,45 @@ const Header = () => {
     useEffect(() => {
         const updateSession = async () => {
             if (session) {
-                const res = await update({
+                await update({
                     ...session,
                     user: {
                         ...session?.user,
-                        role: user.data.role,
-                        email: user.data.email,
-                        name: user.data.fullName,
-                        image: user.data.avatarUrl,
-                        phone: user.data.phoneNumber,
-                        address: user.data.address,
-                        introduce: user.data.introduce,
+                        role: user?.data.role,
+                        email: user?.data.email,
+                        name: user?.data.fullName,
+                        image: user?.data.avatarUrl,
+                        phone: user?.data.phoneNumber,
+                        url: user?.data.url,
+                        address: user?.data.address,
+                        introduce: user?.data.introduce,
                     }
                 })
             }
         };
         updateSession();
-    }, [user])
+    }, [user, session?.user?.accessToken])
     //Search
     const handleSearch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const search = formData.get('search')
         const searchSlug = makeSlug(search?.toString());
-        const matchedCategory = categories.find((category) =>
+        const matchedCategory = dataCategories.find((category) =>
             category.categoryPath.toLowerCase().includes(searchSlug)
-        ) ?? categories.find((category) =>
+        ) ?? dataCategories.find((category) => {
+            const word = searchSlug.split("-")
+
             category.categoryName.toLowerCase().includes(searchSlug)
+        }
         );
-        // matchedCategory ? router.push(`/${matchedCategory?.categoryPath}?search=${search}`) : router.push(`/${categories[0]?.categoryPath}?search=${search}`) 
-        // router.refresh()
         if (matchedCategory) {
 
             router.push(`/${matchedCategory?.categoryPath}?search=${search}`);
         } else {
-            router.push(`/${categories[0]?.categoryPath}?search=${search}`);
+
+            router.push(`/${dataCategories[0]?.categoryPath}?search=${search}`);
         }
-        router.refresh();
     }
     return (
         CheckUrl()
@@ -150,9 +214,9 @@ const Header = () => {
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
-                    {categories?.map((cat, i) => (
+                    {dataCategories?.map((cat, i) => (
                         <li key={i} className="text-[14px] h-[32px] flex items-center hover:bg-gray-300 cursor-pointer">
-                            <a className="w-full text-center" href={`/${cat.categoryPath}`}>{cat.categoryName}</a>
+                            <Link className="w-full text-center" href={`/${cat.categoryPath}`}>{cat.categoryName}</Link>
                         </li>
                     ))}
                 </ul>
@@ -171,8 +235,23 @@ const Header = () => {
                 </div>
             </form>
             <div className="flex items-center space-x-6 ml-6 hover:cursor-pointer">
-                <IoMdNotificationsOutline size={20} />
-                <BiMessageAltDetail size={20} />
+                <div className='relative group'> 
+                    <IoMdNotificationsOutline size={20} />
+                    <div id='menu-notify' className='absolute right-0 top-10 mt-3 flex w-60 flex-col gap-3 rounded-xl bg-white p-3 text-black shadow-lg max-h-[350px] overflow-y-auto'>
+                    </div>
+                </div>
+                <div className="relative group">
+                    <Link href="/chat" className="relative cursor-pointer">
+                        <BiMessageAltDetail size={20} />
+                        {
+                            countChats > 0 &&
+                            <span className=' absolute right-[-3px] top-[-5px] text-[10px] text-center font-bold text-white bg-red-600 px-[2.5px] rounded-[4px]
+                             pt-[1.5px] pb-[3px] leading-[1]'>
+                                {countChats}
+                            </span>
+                        }
+                    </Link>
+                </div>
                 <div className="relative group">
                     <Link href="/order" className="relative cursor-pointer">
                         <HiOutlineShoppingBag size={20} />
@@ -180,10 +259,10 @@ const Header = () => {
                 </div>
             </div>
             <div className="relative flex items-center hover:cursor-pointer ml-6">
-                <a className='text-sm flex justify-center items-center max-md:text-xs max-md:space-x-1' href="/mypost">
+                <Link className='text-sm flex justify-center items-center max-md:text-xs max-md:space-x-1' href="/mypost">
                     <CgList className="mr-2" size={20} />
                     Quản lý tin
-                </a>
+                </Link>
             </div>
             <div className="relative ml-6">
                 {
@@ -192,12 +271,14 @@ const Header = () => {
                             <div id='account' onClick={toggleAccountDropdown} className='flex items-center hover:cursor-pointer'>
                                 <img src={session.user?.sub === "google" ? session.user.image : user?.data?.avatarUrl ?? `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=top&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;h=100&amp;ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2Mjk2MTgwNw&amp;ixlib=rb-1.2.1&amp;q=80&amp;utm_campaign=api-credit&amp;utm_medium=referral&amp;utm_source=unsplash_source&amp;w=100`} alt="img-profile" className="w-6 h-6 rounded-[50%] mr-2   max-md:w-5 max-md:h-5" />
                                 <span className="text-sm max-md:hidden ">{session.user?.sub === "google" ? session.user.name : user?.data?.fullName}</span>
-                                <BsChevronDown className="w-[16px] h-[16px] max-md:w-[32px] ml-[2px]" />
+                                {/* <img src={ status !== "pending" ?  dataMyInfo?.data.avatarUrl : `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=top&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;h=100&amp;ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2Mjk2MTgwNw&amp;ixlib=rb-1.2.1&amp;q=80&amp;utm_campaign=api-credit&amp;utm_medium=referral&amp;utm_source=unsplash_source&amp;w=100`} alt="img-profile" className="w-6 h-6 rounded-[50%] mr-2   max-md:w-5 max-md:h-5" />
+                                <span className="text-sm max-md:hidden ">{session.user?.sub === "google" ? session.user.name : user?.data?.fullName}</span> */}
+                                <BsChevronDown className="x max-md:w-[32px] ml-[2px]" />
                             </div>
                             {isAccountDropdownOpen && (
                                 <div id='menu-account' >
                                     <div className="absolute right-0 top-10 mt-3 flex w-60 flex-col gap-3 rounded-xl bg-white p-3 text-black shadow-lg max-h-[350px] overflow-y-auto ">
-                                        <div className="flex gap-3 items-center">
+                                        <Link href={`/user/${session?.user?.url}`} className="flex gap-3 items-center">
                                             <div className="flex items-center justify-center rounded-lg h-12 w-12 overflow-hidden border-2 border-slate-600">
                                                 <img className="w-full object-cover"
                                                     src={session.user?.sub === "google" ? session.user.image : user?.data?.avatarUrl ?? `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=top&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;h=100&amp;ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2Mjk2MTgwNw&amp;ixlib=rb-1.2.1&amp;q=80&amp;utm_campaign=api-credit&amp;utm_medium=referral&amp;utm_source=unsplash_source&amp;w=100`}
@@ -209,16 +290,16 @@ const Header = () => {
                                                 </div>
                                                 <div className="text-xs text-slate-400">{session.user?.sub === "google" ? session.user.name : user?.data?.fullName}</div>
                                             </div>
-                                        </div>
+                                        </Link>
                                         <div className="border-t border-slate-500/30"></div>
                                         <div className="flex justify-around">
                                             <div className="flex flex-col items-center justify-center">
-                                                <span className="text-base font-semibold">268</span>
+                                                <span className="text-base font-semibold">{countFollower?.toString()}</span>
                                                 <span className="text-xs text-slate-400">Người theo dõi</span>
                                             </div>
                                             <div className="border-l border-slate-500/30 h-8 mx-3"></div>
                                             <div className="flex flex-col items-center justify-center">
-                                                <span className="text-base font-semibold">897</span>
+                                                <span className="text-base font-semibold">{countFollowing?.toString()}</span>
                                                 <span className="text-xs text-slate-400">Đang theo dõi</span>
                                             </div>
                                         </div>
@@ -262,13 +343,24 @@ const Header = () => {
                                         <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Khác</div>
                                         <div className="flex flex-col hover:cursor-pointer">
                                             {
-                                                (session?.user?.role === "Admin" || session?.user?.role === "Seller")
-                                                && <Link href="/admin/dashboard" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
+                                                (session?.user?.role === "Admin")
+                                                &&
+                                                (<Link href={`/admin/dashboard`} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                                     <div className="rounded-full bg-gray-300 p-1">
                                                         <MdDashboard className="text-gray-500" size="16px" />
                                                     </div>
                                                     <span className="text-sm">DashBoard</span>
-                                                </Link>
+                                                </Link>)
+                                            }
+                                            {
+                                                (session?.user?.role === "Seller")
+                                                &&
+                                                (<Link href={`/admin/dashboard/post`} className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
+                                                    <div className="rounded-full bg-gray-300 p-1">
+                                                        <MdDashboard className="text-gray-500" size="16px" />
+                                                    </div>
+                                                    <span className="text-sm">DashBoard</span>
+                                                </Link>)
                                             }
                                             <Link href="/settings/profile" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                                 <div className="rounded-full bg-gray-300 p-1">
@@ -352,12 +444,12 @@ const Header = () => {
                                     </div>
                                     <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Khác</div>
                                     <div className="flex flex-col">
-                                        <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
+                                        <Link href="/settings/profile" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                             <div className="rounded-full bg-gray-300 p-1">
                                                 <IoMdSettings className="text-gray-500" size="16px" />
                                             </div>
                                             <span className="text-sm">Cài đặt</span>
-                                        </a>
+                                        </Link>
                                         <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                             <BiSolidHelpCircle className="text-gray-500" size="24px" />
                                             <span className="text-sm">Trợ giúp</span>

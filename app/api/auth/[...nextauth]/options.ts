@@ -54,17 +54,18 @@ export const options: NextAuthOptions = {
     ],
     callbacks: {
         async jwt({ token, user, account, trigger, session }) {
-            console.log(`jwt token:`, { token, user, account, session })
             if (user) {
                 token.sub = account.provider;
                 token.accessToken = account.access_token;
             }
+            console.log(`jwt token:`, { token, user, account, session })
             if (trigger === "update") {
                 return { ...token, ...session.user };
             }
             return { ...token, ...user };
         },
         async session({ session, token, user }) {
+            console.log(`session:`, { session, token, user})
             if (token.sub === "google") {
                 try {
                     await axios.get(`/api/User/CheckUserByEmail?email=${token.email}`)

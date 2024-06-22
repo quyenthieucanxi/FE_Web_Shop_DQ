@@ -49,7 +49,7 @@ export default function DashBoardPost() {
 
     const handleCancelClick = async (rowId: string) => {
         try {
-            const res = await UpdateStatus(rowId, "Huỷ");
+            await UpdateStatus(rowId, "Huỷ");
             queryClient.invalidateQueries({queryKey: ['post',Status]});
             toast.success("Sản phẩm đã được huỷ", {
                 position: "top-right",

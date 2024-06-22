@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ConvertToDDMMYYYY } from "@/utils/DateHelper";
 import { FormatCurrencyVND, makeSlug } from "@/utils/StringHelper";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
@@ -15,7 +16,7 @@ export default function Product(Props: Props) {
     const hanldeLikeClick = async () => {
         try {
             const res = await axiosAuth.post(`/api/User/AddLikePost?postId=${Props.product?.id}`)
-            toast.success("Lưu tinh thành công", {
+            toast.success("Lưu tin thành công", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -45,12 +46,12 @@ export default function Product(Props: Props) {
                 typeDisplay === "row" ?
                     <div className="flex flex-col hover:cursor-pointer border border-solid  p-3 hover:shadow-md rounded-lg">
                         <div className="relative h-[250px]">
-                            <a className="mb-2" href={`/${makeSlug(Props.product?.categoryName)}/${Props.product?.postPath}`}>
+                            <Link className="mb-2" href={`/${Props.product?.categoryPath}/${Props.product?.postPath}`}>
                                 <img className="rounded-sm h-[202px] object-cover" src={Props.product?.urlImage} alt="img" loading="lazy" />            
                                 <div className="max-h-[40px] font-normal text-sm mt-2 line-clamp-2">
                                     <h3 className=" overflow-hidden overflow-ellipsis h-[40px] max-h-[40px] whitespace-normal inline ">{Props.product?.title}</h3>       
                                 </div>
-                            </a>
+                            </Link>
                             <button className="absolute right-2 bottom-14" onClick={hanldeLikeClick}>
                                 <img width="20" src="https://static.chotot.com/storage/chotot-icons/next/save-ad.svg" alt="like" />
                             </button>

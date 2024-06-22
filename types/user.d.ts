@@ -9,6 +9,7 @@ interface User {
     introduce?: string;
     gender?: string;
     dob?: Date;
+    url?: string;
     avatarUrl?: string;
     isActive?: boolean;
     followedCount? : number;

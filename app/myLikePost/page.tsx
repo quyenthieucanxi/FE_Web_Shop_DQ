@@ -2,15 +2,17 @@
 import { FcLike } from "react-icons/fc";
 import Loading from "@/components/Loading";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth"
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalculateTimePassedAsync, ConvertToDDMMYYYY } from "@/utils/DateHelper";
 import { FormatCurrencyVND, makeSlug } from "@/utils/StringHelper";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import Toast from "@/components/Toast";
+import { useSession } from "next-auth/react";
 
 export default function MyLikePostPage() {
     const axiosAuth = useAxiosAuth();
+    const { data: session, update } = useSession(); 
     const queryClient = useQueryClient();
     const fetchData = async () => {
         const res = await axiosAuth.get(`/api/User/GetSavesPost`)
@@ -19,11 +21,13 @@ export default function MyLikePostPage() {
     const { data, status } = useQuery({
         queryKey: ['SavePosts'],
         queryFn: fetchData,
+        enabled: !!session?.user.accessToken,
+        placeholderData: keepPreviousData
     })
 
     const handleRemoveLike = async (postId: string) => {
         try {
-            const res = await axiosAuth.delete(`/api/User/RemoveSavesPost?postId=${postId}`)
+            await axiosAuth.delete(`/api/User/RemoveSavesPost?postId=${postId}`)
             queryClient.invalidateQueries({ queryKey: ['SavePosts']});
             toast.success("Tin đã xoá khỏi danh sách yêu thích", {
                 position: "top-right",

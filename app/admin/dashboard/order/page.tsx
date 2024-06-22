@@ -23,21 +23,21 @@ interface Column {
     format?: (value: any) => string;
 }
 
-const columns: Column[] = [
-    { id: 'checkbox', label: '', minWidth: 100 },
-    { id: ['user', 'fullName'], label: 'Tên người đặt', minWidth: 150 },
-    { id: ['product', 'title'], label: 'Tên sản phẩm', minWidth: 150 },
-    { id: ['product', 'urlImage'], label: 'Ảnh', minWidth: 150 },
-    { id: ['product', 'price'], label: 'Giá', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
-    { id: 'quantity', label: 'Số lượng', minWidth: 100 },
-    { id: 'totalPrice', label: 'Thành tiền', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
-    { id: 'status', label: 'Trạng thái', minWidth: 150 },
-    { id: 'note', label: 'Chú thích', minWidth: 100 },
-    { id: 'payment', label: 'Thanh toán', minWidth: 160 },
-    { id: 'recipientName', label: 'Thông tin người nhận', minWidth: 160 },
-    { id: 'addressShipping', label: 'Địa chỉ người nhận', minWidth: 200 },
-    { id: 'createdTime', label: 'Thời gian', minWidth: 100, format: (value: string) => ConvertToDDMMYYYY(value) },
-];
+    const columns: Column[] = [
+        { id: 'checkbox', label: '', minWidth: 100 },
+        { id: ['user', 'fullName'], label: 'Tên người đặt', minWidth: 150 },
+        { id: ['products','0','title'], label: 'Tên sản phẩm', minWidth: 150 },
+        { id: ['products','0','urlImage'], label: 'Ảnh', minWidth: 150 },
+        { id: ['products','0','price'], label: 'Giá', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
+        { id: 'quantity', label: 'Số lượng', minWidth: 100 },
+        { id: 'totalPrice', label: 'Thành tiền', minWidth: 100, format: (value: string) => FormatCurrencyVND(value) },
+        { id: 'status', label: 'Trạng thái', minWidth: 150 },
+        { id: 'note', label: 'Chú thích', minWidth: 100 },
+        { id: 'payment', label: 'Thanh toán', minWidth: 160 },
+        { id: 'recipientName', label: 'Thông tin người nhận', minWidth: 160 },
+        { id: 'addressShipping', label: 'Địa chỉ người nhận', minWidth: 200 },
+        { id: 'createdTime', label: 'Thời gian', minWidth: 100, format: (value: string) => ConvertToDDMMYYYY(value) },
+    ];
 export default function DashBoardPage() {
     const [selectedStatus, setSelectedStatus] = useState<string>("");
     const [selectedRow, setSelectedRow] = useState<string>("");
@@ -55,6 +55,7 @@ export default function DashBoardPage() {
     const { data, status } = useQuery({
         queryKey: ['order'],
         queryFn: fetchData,
+        placeholderData: keepPreviousData,
         enabled: !!session?.user?.accessToken,
     })
 
@@ -109,11 +110,11 @@ export default function DashBoardPage() {
                         className="text-[#222] text-sm  px-3 py-2" >
                         <option hidden value=""></option>
                         <option value={""} disabled >Chọn trạng thái</option>
-                        <option value="XÁC NHẬN">XÁC NHẬN</option>
-                        <option value="ĐANG XỬ LÝ">ĐANG XỬ LÝ</option>
-                        <option value="ĐANG GIAO">ĐANG GIAO</option>
-                        <option value="ĐÃ GIAO">ĐÃ GIAO</option>
-                        <option value="HUỶ">HUỶ</option>
+                        <option value="Xác nhận">XÁC NHẬN</option>
+                        <option value="Đang xử lý">ĐANG XỬ LÝ</option>
+                        <option value="Đang giao">ĐANG GIAO</option>
+                        <option value="Đã giao">ĐÃ GIAO</option>
+                        <option value="Huỷ">HUỶ</option>
                     </select>
                     <button onClick={handleUpdateStatus} className='bg-green-500 p-2 text-xs text-white flex items-center rounded ml-5'>
                         Xác nhận
