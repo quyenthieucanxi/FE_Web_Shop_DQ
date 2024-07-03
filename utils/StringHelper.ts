@@ -10,38 +10,35 @@ export const FormatCurrencyVND = (value: string) => {
         currency: "VND",
     });
 }
-function removeDiacriticsAndConvert(inputStr) {
-    const vietnameseChars = "ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚÝàáâãèéêìíòóôõùúýĂăĐđĨĩŨũƠơƯưỳừửữỳỹ";
-    const englishChars = "AAAAEEEIIOOOOUUYaaaaeeeiioooouuyAaDdIiUuOoUuuuu";
 
-    // Tạo một bảng ánh xạ giữa chữ cái Tiếng Việt và Tiếng Anh
-    const charMap = {};
-    for (let i = 0; i < vietnameseChars.length; i++) {
-        charMap[vietnameseChars[i]] = englishChars[i];
-    }
-
-    // Chuyển đổi chuỗi
-    const convertedStr = inputStr
-        .split('')
-        .map(char => charMap[char] || char)
-        .join('');
-
-    // Loại bỏ dấu thanh
-    const removedDiacriticsStr = convertedStr.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
-    return removedDiacriticsStr;
-}
 export const makeSlug = (inputStr: string) => {
-    // Loại bỏ các ký tự đặc biệt không mong muốn từ chuỗi đầu vào
-    const sanitizedStr = inputStr.replace(/[^a-zA-Z0-9\s]/g, '');
-
-    // Chuyển đổi chữ có dấu thành chữ không dấu và loại bỏ các ký tự không mong muốn
-    let slug = removeDiacriticsAndConvert(sanitizedStr);
-    // Chuyển đổi thành chữ thường và thay thế khoảng trắng bằng dấu gạch ngang
-    slug = slug.toLowerCase().replace(/\s+/g, '-');
-
-    return slug;
+    // Chuyển hết sang chữ thường
+	let str = inputStr.toLowerCase();     
+ 
+	// xóa dấu
+	str = str
+		.normalize('NFD') // chuyển chuỗi sang unicode tổ hợp
+		.replace(/[\u0300-\u036f]/g, ''); // xóa các ký tự dấu sau khi tách tổ hợp
+ 
+	// Thay ký tự đĐ
+	str = str.replace(/[đĐ]/g, 'd');
+	
+	// Xóa ký tự đặc biệt
+	str = str.replace(/([^0-9a-z-\s])/g, '');
+ 
+	// Xóa khoảng trắng thay bằng ký tự -
+	str = str.replace(/(\s+)/g, '-');
+	
+	// Xóa ký tự - liên tiếp
+	str = str.replace(/-+/g, '-');
+ 
+	// xóa phần dư - ở đầu & cuối
+	str = str.replace(/^-+|-+$/g, '');
+ 
+	// return
+	return str;
 }
+
 
 export const getBefore = (inputString, char) => {
     var index = inputString.indexOf(char);
@@ -58,4 +55,7 @@ export const getBeforeLast = (inputString, char) => {
     } else {
         return inputString;
     }
+}
+export const convertToVND = (amount) =>  {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
 }

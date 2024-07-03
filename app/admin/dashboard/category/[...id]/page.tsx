@@ -6,6 +6,7 @@ import axios from "@/libs/axios";
 import { GetCategoryById, Update } from "@/services/CategoryService";
 import { makeSlug } from "@/utils/StringHelper";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Console } from "console";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -22,31 +23,23 @@ export default function UpdateCategoryPage({ params }: { params: { id: string[] 
         queryFn: fetchData,
         placeholderData: keepPreviousData,
     })
-    const updateData = async () => {
-        if (selectedImage) {
-            const imageFile = inputFileRef.current.files[0];
-            const formDataImg = new FormData();
-            formDataImg.append("formFile", imageFile);
-            const res = await axios.post("/api/File/Upload", formDataImg, {
-                headers: { "Content-Type": "multipart/form-data" },
-            })
-            setForm({
-                ...form,
-                urlImg: res.data.data.url,
-            })
-        }
-        await Update(form);
-    }
-    const mutation = useMutation({
-        mutationFn:  updateData,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['id'] })
-        },
-    })
-   
     const handleUpdate = async () => {
+
         try {
-            mutation.mutate();
+            if (selectedImage) {
+                const imageFile = inputFileRef.current.files[0];
+                const formDataImg = new FormData();
+                formDataImg.append("formFile", imageFile);
+                const res = await axios.post("/api/File/Upload", formDataImg, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                })
+                setForm({
+                    ...form,
+                    urlImg: res.data.data.url,
+                })
+            }
+            await Update(params.id[0], form);
+            queryClient.invalidateQueries({queryKey: ['categoreies']})
             toast.success("Cập nhập thành công", {
                 position: "top-right",
                 autoClose: 3000,
@@ -72,6 +65,7 @@ export default function UpdateCategoryPage({ params }: { params: { id: string[] 
     }
 
 
+
     const inputFileRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const handleFileChange = (e) => {
@@ -85,9 +79,8 @@ export default function UpdateCategoryPage({ params }: { params: { id: string[] 
         }
     };
     const [form, setForm] = useState({
-        id: "",
-        CategoryName: "",
-        CategoryPath: "",
+        categoryName: "",
+        categoryPath: "",
         urlImg: "",
     })
     const handleChangeInput = (e) => {
@@ -99,20 +92,27 @@ export default function UpdateCategoryPage({ params }: { params: { id: string[] 
     useEffect(() => {
         setForm({
             ...form,
-            id: params.id[0],
-            CategoryName: data?.categoryName || "",
-            CategoryPath: makeSlug(data?.categoryName || ""),
+            categoryName: data?.categoryName || "",
+            categoryPath: data?.categoryPath || "",
             urlImg: selectedImage ? selectedImage : data?.urlImg || "",
         })
-    }, [selectedImage])
+    }, [data, selectedImage])
+    useEffect(()=> {
+        setForm({
+            ...form,     
+            categoryPath: makeSlug(form?.categoryName),
+        })
+        
+    },[form?.categoryName])
+    console.log("dads")
     return (
         <div className=" mx-auto mt-5 w-[700px]">
             <Toast />
-            <Input onChange={handleChangeInput} label="title" type="text" text="Tên thể loại" value={form.CategoryName}></Input>
+            <Input onChange={handleChangeInput} label="categoryName" type="text" text="Tên thể loại" value={form?.categoryName}></Input>
             <div className="my-3">
                 <span className="text-sm font-normal mr-5">Ảnh</span>
                 <input ref={inputFileRef} onChange={handleFileChange} type="file" accept="image/*" />
-                <img className="max-h-[250px] max-w-[250px]" src={form.urlImg} alt="" />
+                <img className="max-h-[250px] max-w-[250px] mt-2" src={form.urlImg} alt="" />
             </div>
             <Button onClick={handleUpdate} className="my-4" childern="Xác nhận"></Button>
         </div>

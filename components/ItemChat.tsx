@@ -15,7 +15,7 @@ interface Props {
 export default function ItemChat({ user, chat }: Props) {
     const { data : session} = useSession()
     const queryClient = useQueryClient()
-    const axioAuth = useAxiosAuth()
+    const axiosAuth = useAxiosAuth()
     const [isRead,setIsRead ] =  useState(chat?.isReceiverRead)
     const hanldeIsRead = async () => {
         if (chat?.isReceiverRead == true)
@@ -23,7 +23,7 @@ export default function ItemChat({ user, chat }: Props) {
             return
         }
         try {
-            const res = await axioAuth.put(`/api/Chats/UpdateIsRead/${chat?.id}`)
+            const res = await axiosAuth.put(`/api/Chats/UpdateIsRead/${chat?.id}`)
             queryClient.invalidateQueries({ queryKey: ["countChatsIsNotRead"] })
             setIsRead(true)
         } catch (error) {

@@ -15,35 +15,52 @@ import { MdDashboard } from "react-icons/md";
 import { FcLike } from "react-icons/fc";
 import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
-import { FormEvent, useEffect, useRef, useState } from 'react';
+import { FormEvent, Fragment, useEffect, useRef, useState } from 'react';
 import useAxiosAuth from '@/libs/hooks/useAxiosAuth';
 import { CheckUrl } from '@/utils/TestHelper';
 import { useRouter } from 'next/navigation';
-import { redirect } from 'next/navigation'
+import { useInView } from "react-intersection-observer";
 import { GetAllCategory } from '@/services/CategoryService';
-import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
+import { keepPreviousData, useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { makeSlug } from '@/utils/StringHelper';
 import axios from '@/libs/axios';
 import { useHub } from '@/app/context/HubProvider';
-
+import Notify from './Notify';
+import Box from '@mui/material/Box';
+import Tab from '@mui/material/Tab';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 
 
 const Header = () => {
+    const pageSizeNotify = 20;
     const { data: session, update } = useSession();
     const { connection } = useHub();
     const queryClient = useQueryClient()
     const router = useRouter();
     const [isDropdownOpen, setDropdownOpen] = useState(false);
     const [isAccountDropdownOpen, setAccountDropdownOpen] = useState(false);
-    const [isNotifyDropdownOpen,setNotifyDropdownOpen] = useState(false);
+    const [isNotifyDropdownOpen, setNotifyDropdownOpen] = useState(false);
     const [user, setUser] = useState(null);
     const containerRef = useRef();
+    const { ref, inView, entry } = useInView();
+    const [notifies, setNotifies] = useState([])
+    const optionsTabNotify = [
+        { value: null, label: 'Tất cả' },
+        { value: "false", label: 'Chưa đọc' },
+    ];
+    const [valueTabNotify, setValueTabNotify] = useState(null);
     const handleMouseEnter = () => {
         setDropdownOpen(true);
     };
 
     const handleMouseLeave = () => {
         setDropdownOpen(false);
+    };
+    const toggleNotifyDropdown = (): void => {
+
+        setNotifyDropdownOpen(!isNotifyDropdownOpen)
     };
     const toggleAccountDropdown = (): void => {
 
@@ -88,11 +105,20 @@ const Header = () => {
                 setAccountDropdownOpen(false);
             }
         };
+        const handleNotifyDropdownOutsideClick = (event: MouseEvent) => {
+            const notifyDropdown = document.getElementById('menu-notify');
+            const notifyToggle = document.getElementById('notify');
+            if (notifyDropdown && notifyToggle && !notifyDropdown.contains(event.target as Node) && !notifyToggle.contains(event.target as Node)) {
+                setNotifyDropdownOpen(false);
+            }
+        }
         // Attach the event listener when the component mounts
         document.addEventListener('click', handleAccountDropdownOutsideClick);
+        document.addEventListener('click', handleNotifyDropdownOutsideClick);
         // Detach the event listener when the component unmounts
         return () => {
             document.removeEventListener('click', handleAccountDropdownOutsideClick);
+            document.removeEventListener('click', handleNotifyDropdownOutsideClick);
         };
     }, []);
     const axiosAuth = useAxiosAuth();
@@ -118,6 +144,49 @@ const Header = () => {
         enabled: !!session?.user?.accessToken
     }
     )
+    const countNotifysIsNotRead = async () => {
+        const { data: response }: { data: Response } = await axiosAuth.get(`/api/Notify/CountNotifiesNotIsRead`)
+        return response.data
+    }
+    const { data: countNotifies }: { data: number } = useQuery({
+        queryKey: ["countNotifysIsNotRead"],
+        queryFn: countNotifysIsNotRead,
+        placeholderData: keepPreviousData,
+        enabled: !!session?.user?.accessToken
+    }
+    )
+    const fetchNotifies = async (pageParam: number,status? : boolean) => {
+        const { data: response }: { data: Response } = await axiosAuth.get(`/api/Notify/GetByUser?page=${pageParam}&pageSize=${pageSizeNotify}${status !== null ? `&status=${status}` : ""}` )
+        return response.data as Array<Notity>
+    }
+    const {
+        data: dataNotifies,
+        fetchNextPage,
+        isFetching,
+        isFetchingNextPage,
+        hasNextPage,
+        status
+    } = useInfiniteQuery({
+        queryKey: ['queryNotifies', notifies,valueTabNotify],
+        queryFn: ({ pageParam }) => fetchNotifies(pageParam,valueTabNotify),
+        initialPageParam: 0,
+        placeholderData: keepPreviousData,
+        getNextPageParam: (_, pages) => pages.length + 1,
+        enabled: !!session?.user?.accessToken
+
+    });
+
+    useEffect(() => {
+        if (dataNotifies) {
+            setNotifies(dataNotifies?.pages)
+        }
+    }, [dataNotifies])
+    useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage();
+        }
+    }, [inView, hasNextPage, fetchNextPage])
+
     useEffect(() => {
         if (connection && session?.user?.accessToken) {
             connection.start()
@@ -128,8 +197,20 @@ const Header = () => {
             connection.on("ReceiveMessage", (url, message) => {
                 queryClient.invalidateQueries({ queryKey: ["countChatsIsNotRead"] });
             });
+            connection.on("ReceiveNotification", (notifyTemp) => {
+                queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+            });
         }
+        return () => {
+            if (connection) {
+                connection.off("ReceiveMessage");
+                connection.off("ReceiveNotification");
+                connection.stop();
+            }
+        };
     }, [connection, session?.user?.accessToken]);
+
     useEffect(() => {
         const fetchData = async () => {
             if (session) {
@@ -186,6 +267,12 @@ const Header = () => {
             router.push(`/${dataCategories[0]?.categoryPath}?search=${search}`);
         }
     }
+
+
+    const handleChangeTabNotify = (event: React.SyntheticEvent, newValue: string) => {
+        setValueTabNotify(newValue)
+        queryClient.invalidateQueries({ queryKey: ['queryNotifies', notifies,valueTabNotify] });
+    };
     return (
         CheckUrl()
         &&
@@ -235,10 +322,65 @@ const Header = () => {
                 </div>
             </form>
             <div className="flex items-center space-x-6 ml-6 hover:cursor-pointer">
-                <div className='relative group'> 
-                    <IoMdNotificationsOutline size={20} />
-                    <div id='menu-notify' className='absolute right-0 top-10 mt-3 flex w-60 flex-col gap-3 rounded-xl bg-white p-3 text-black shadow-lg max-h-[350px] overflow-y-auto'>
+                <div className='relative group'>
+                    <div id="notify" onClick={toggleNotifyDropdown}>
+                        <IoMdNotificationsOutline size={24} />
                     </div>
+
+                    {isNotifyDropdownOpen &&
+
+                        <div id='menu-notify' className='absolute right-0 top-10 mt-3 flex w-[380px] flex-col gap-3 rounded-xl bg-white p-3 text-black shadow-lg max-h-[350px] overflow-y-auto'>
+                            <TabContext value={valueTabNotify}>
+                                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                                    <TabList onChange={handleChangeTabNotify} aria-label="lab API tabs example">
+                                        {
+                                            optionsTabNotify.map((tab, index) => {
+                                                return (
+                                                    <Tab key={index} label={tab.label} value={tab.value} />
+                                                )
+                                            })
+                                        }
+                                    </TabList>
+                                </Box>
+                                {
+                                    optionsTabNotify.map((tab, index) => {
+                                            return (
+                                                <TabPanel key={index} sx={{ padding: '0' }} value={tab.value}>{
+                                                    notifies?.map((group, i) => {
+                                                        if (Array.isArray(group)) {
+                                                            return (
+                                                                <Fragment key={i}>
+                                                                    {group?.map((notify, index) => {
+                                                                        if (group.length == index + 1) {
+                                                                            return (
+                                                                                <Notify key={index} notify={notify} innerRef={ref} />
+                                                                            );
+                                                                        }
+                                                                        return <Notify key={index} notify={notify} />
+                                                                    })}
+                                                                </ Fragment>
+                                                            )
+                                                        }
+                                                    })
+                                                }
+                                                </TabPanel>
+                                            )
+                                        }
+                                        
+                                    )
+                                }
+                            </TabContext>
+
+
+                        </div>
+                    }
+                    {
+                        countNotifies > 0 &&
+                        <span className=' absolute right-[-3px] top-[-5px] text-[10px] text-center font-bold text-white bg-red-600 px-[2.5px] rounded-[4px]
+                             pt-[1.5px] pb-[3px] leading-[1]'>
+                            {countNotifies}
+                        </span>
+                    }
                 </div>
                 <div className="relative group">
                     <Link href="/chat" className="relative cursor-pointer">

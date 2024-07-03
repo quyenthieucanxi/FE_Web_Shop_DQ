@@ -78,7 +78,6 @@ export default function ChatDirectPage({ params }: { params: { slug: string } })
         placeholderData: keepPreviousData,
     }
     )
-    console.log(infoUser?.url)
     useEffect(() => {
         if (historyChat) {
             setMessages(historyChat);
@@ -210,7 +209,7 @@ export default function ChatDirectPage({ params }: { params: { slug: string } })
                 <div className="h-[100%] flex flex-col border-r-[1px] ">
                     <div className=' py-[6px] pl-[3px] pr-[12px] cursor-pointer border-b-[1px]'>
                         {
-                            <Link className="flex" href={`/user/${infoUser?.url}}`}>
+                            <Link className="flex" href={`/user/${infoUser?.url}`}>
                                 <div className='mr-3'>
                                     <img className='rounded-[50%] w-[30px] h-[30px] ml-[5px]' src={infoUser?.avatarUrl}
                                         alt={infoUser?.fullName} />

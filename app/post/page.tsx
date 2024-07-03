@@ -11,7 +11,7 @@ import { ValidateInput, ValidateInputPrice, ValidateInputQuantity } from "@/util
 import Toast from "@/components/Toast";
 import { toast } from "react-toastify";
 import axios from "@/libs/axios";
-import { makeSlug } from "@/utils/StringHelper";
+import { convertToVND, makeSlug } from "@/utils/StringHelper";
 import ModalAddress from "@/components/ModalAddress";
 
 export default function PostPage() {
@@ -183,8 +183,8 @@ export default function PostPage() {
                     <form onSubmit={HandleSubmit} className="space-y-6">
                         <Input label="name" type="text" text="Tên sản phẩm" error={errors[0]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
                         <Input label="description" type="text" text="Mô tả sản phẩm" error={errors[1]} textarea={true} className="h-[110px]" classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
-                        <Input label="price" type="number" text="Giá" error={errors[2]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
-                        <Input label="quantity" type="number" text="Số lượng" placeholder="0" error={errors[3]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
+                        <Input label="price" type="text" text="Giá" error={errors[2]}  classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
+                        <Input label="quantity" type="text" text="Số lượng" placeholder="0" error={errors[3]} classNamelable="after:content-['*'] after:ml-2 after:text-[#e5193b]" />
                         <div onClick={openModalAddress} className="border-[#cacaca] w-full h-12  rounded border border-solid relative cursor-pointer ">
                             <label className={` absolute top-[12px] left-[12px] cursor-text text-[#8c8c8c] text-sm capitalize after:content-['*'] after:ml-2 after:text-[#e5193b] ${selectedAddress ? "scale(.7143) translate-y-[-10px]" : ""} `} htmlFor="Địa chỉ">Địa chỉ</label>
                             <select name="address" className="w-full h-full text-[#222] text-sm appearance-none pointer-events-none px-3 pt-4" >

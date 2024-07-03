@@ -5,11 +5,11 @@ export async function GetAllCategory (){
     return res.data;
 }
 export async function GetCategoryById(CateId: string){
-    const res = await axios.get(`/api/Category/$GetbyId=${CateId}`);
+    const res = await axios.get(`/api/Category/${CateId}`);
     return res.data;
 }
-export const Update = async (model : Object) => {
-    const res = await axios.put(`/api/Category/Update`,model)
+export const Update = async (CateId: string,model : Object) => {
+    const res = await axios.put(`/api/Category/Update/${CateId}`,model)
     return res.data;
 }
 
