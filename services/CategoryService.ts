@@ -13,3 +13,7 @@ export const Update = async (CateId: string,model : Object) => {
     return res.data;
 }
 
+export async function Create (model: Object){
+    const res = await axios.post(`/api/Category/Create`,model);
+    return res.data;
+}

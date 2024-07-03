@@ -6,7 +6,6 @@ import axios from "@/libs/axios";
 import { GetCategoryById, Update } from "@/services/CategoryService";
 import { makeSlug } from "@/utils/StringHelper";
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Console } from "console";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -104,7 +103,6 @@ export default function UpdateCategoryPage({ params }: { params: { id: string[] 
         })
         
     },[form?.categoryName])
-    console.log("dads")
     return (
         <div className=" mx-auto mt-5 w-[700px]">
             <Toast />
