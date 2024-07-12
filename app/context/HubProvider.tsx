@@ -19,7 +19,7 @@ export default function HubProvider({children} : Props) {
     useEffect(() => {
         if (session?.user?.accessToken) {
             const newConnection = new HubConnectionBuilder()
-                .withUrl("http://192.168.1.176:5000/chat", {
+                .withUrl(process.env.NEXT_PUBLIC_URL_API + "/chat", {
                     accessTokenFactory: () => session?.user?.accessToken
                 })
                 .withAutomaticReconnect()

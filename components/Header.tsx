@@ -408,7 +408,7 @@ const Header = () => {
             </div>
             <div className="relative ml-6">
                 {
-                    session ? (
+                    session?.user ? (
                         <>
                             <div id='account' onClick={toggleAccountDropdown} className='flex items-center hover:cursor-pointer'>
                                 <img src={session.user?.sub === "google" ? session.user.image : user?.data?.avatarUrl ?? `https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?crop=top&amp;cs=tinysrgb&amp;fit=crop&amp;fm=jpg&amp;h=100&amp;ixid=MnwxfDB8MXxyYW5kb218MHx8fHx8fHx8MTY2Mjk2MTgwNw&amp;ixlib=rb-1.2.1&amp;q=80&amp;utm_campaign=api-credit&amp;utm_medium=referral&amp;utm_source=unsplash_source&amp;w=100`} alt="img-profile" className="w-6 h-6 rounded-[50%] mr-2   max-md:w-5 max-md:h-5" />
