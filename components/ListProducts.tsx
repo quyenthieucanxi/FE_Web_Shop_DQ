@@ -124,8 +124,8 @@ export default function ListProducts({ pagination = false, page, catPath, search
                 pagination ?
                     <div className="flex justify-center mt-3">
                         <ThemeProvider theme={theme}>
-                            <DynamicPagination count={Math.ceil(dataQuery?.postList?.length / ITEMSPAGE)}
-                                page={page ? Number.parseInt(page) : 1} variant="outlined" shape="rounded" color="primary"
+                            <DynamicPagination count={Math.ceil(dataQuery?.totalPost/ ITEMSPAGE)}
+                                page={page != null ? Number.parseInt(page) : 1} variant="outlined" shape="rounded" color="primary"
                                 renderItem={(item) => (
                                     <Link href={`/${catPath}${item.page === 1 ? `?orderByDirection=${orderByDirection}` : `?page=${item.page}&orderByDirection=${orderByDirection}`}`} passHref>
                                         <DynamicPaginationItem

@@ -29,7 +29,7 @@ export default function Login(props: Props) {
             })
             if (!res?.error) {
                 setTimeout(() => {
-                    router.push(props.callbackUrl ?? process.env.NEXT_PUBLIC_URL_API);
+                    router.push(props.callbackUrl ?? process.env.NEXTAUTH_URL);
                     router.refresh();
                 }, 1000);
             }
