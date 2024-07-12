@@ -36,3 +36,8 @@ export const Update = async (model : Object) => {
     const res = await axios.put(`/api/Post/Update`,model)
     return res.data;
 }
+
+export const Delete = async (id: string) => {
+    const res = await axios.put(`/api/Post/Delete/${id}`)
+    return res.data;
+}

@@ -2,11 +2,13 @@
 import Button from "@/components/Button";
 import Loading from "@/components/Loading";
 import Toast from "@/components/Toast";
-import { GetAllCategory } from "@/services/CategoryService";
+import { Delete, GetAllCategory } from "@/services/CategoryService";
 import { ConvertToDDMMYYYY } from "@/utils/DateHelper";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import dynamic from "next/dynamic";
 import { useRouter } from 'next/navigation';
+import { toast } from "react-toastify";
+
 
 const StickyHeadTable = dynamic(() => import("@/components/Table"), { ssr: false });
 
@@ -23,6 +25,7 @@ const columns: Column[] = [
     { id: 'createdTime', label: 'Thời gian', minWidth: 100, format: (value: string) => ConvertToDDMMYYYY(value) },
     { id: 'modifiedTime', label: 'Thời gian', minWidth: 100, format: (value: string) => ConvertToDDMMYYYY(value) },
     { id: 'update', label: '', minWidth: 130, },
+    { id: 'cancel', label: '', minWidth: 100, },
 ];
 
 export default function CategoryDashboard() {
@@ -36,6 +39,25 @@ export default function CategoryDashboard() {
         queryFn:  fetchCategories,
         placeholderData: keepPreviousData
     })
+    const handleDeleteClick = async (rowId: string) => {
+        try {
+            await Delete(rowId);
+            toast.success("Danh mục đã được huỷ", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+        }
+        catch (error) {
+            
+        }
+        
+    };
     return (
         <>
             <Toast />
@@ -44,7 +66,7 @@ export default function CategoryDashboard() {
                     <Button onClick={() => { router.push("/admin/dashboard/category/create") }} size="small" childern={"Tạo mới danh mục"} ></Button>
                 </div>
                 {
-                    statusCategories !== "success" ? <Loading /> : <StickyHeadTable columns={columns} rows={dataCategories}  />
+                    statusCategories !== "success" ? <Loading /> : <StickyHeadTable columns={columns} rows={dataCategories} handleDelete={handleDeleteClick} />
                 }
             </div>
         </>
