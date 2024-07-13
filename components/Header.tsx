@@ -225,7 +225,7 @@ const Header = () => {
         fetchData();
     }, [session?.user?.accessToken]);
     const updateSession = async () => {
-        if (session) {
+        if (session && user != null) {
             await update({
                 ...session,
                 user: {
