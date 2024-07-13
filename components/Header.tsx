@@ -243,16 +243,18 @@ const Header = () => {
         }
     };
     useEffect(() => {
-       
         updateSession();
+        console.log("session updated")
     }, [user, session?.user?.accessToken])
+    console.log(user)
+    
     useEffect(() => {
         const interval = setInterval(() => updateSession(), 1000 * 60 * 60)
         return () => clearInterval(interval)
       }, [update])
       useEffect(() => {
         const visibilityHandler = () =>
-          document.visibilityState === "visible" && update()
+          document.visibilityState === "visible" && updateSession()
         window.addEventListener("visibilitychange", visibilityHandler, false)
         return () =>
           window.removeEventListener("visibilitychange", visibilityHandler, false)
