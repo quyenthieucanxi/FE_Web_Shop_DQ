@@ -53,14 +53,15 @@ export const options: NextAuthOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token, user, account, trigger, session }) {
+        async jwt({ token, user, account, trigger, session,  }) {
             if (user) {
                 token.sub = account.provider;
                 token.accessToken = account.access_token;
             }
-            console.log(`jwt token:`, { token, user, account, session })
-            if (trigger === "update") {
+            if (trigger === "update" && session) {
+                console.log("Updating JWT token:", { token, session });
                 return { ...token, ...session.user };
+                
             }
             return { ...token, ...user };
         },

@@ -224,27 +224,39 @@ const Header = () => {
         };
         fetchData();
     }, [session?.user?.accessToken]);
+    const updateSession = async () => {
+        if (session) {
+            await update({
+                ...session,
+                user: {
+                    ...session?.user,
+                    role: user?.data?.role,
+                    email: user?.data?.email,
+                    name: user?.data?.fullName,
+                    image: user?.data?.avatarUrl,
+                    phone: user?.data?.phoneNumber,
+                    url: user?.data?.url,
+                    address: user?.data?.address,
+                    introduce: user?.data?.introduce,
+                }
+            })
+        }
+    };
     useEffect(() => {
-        const updateSession = async () => {
-            if (session) {
-                await update({
-                    ...session,
-                    user: {
-                        ...session?.user,
-                        role: user?.data.role,
-                        email: user?.data.email,
-                        name: user?.data.fullName,
-                        image: user?.data.avatarUrl,
-                        phone: user?.data.phoneNumber,
-                        url: user?.data.url,
-                        address: user?.data.address,
-                        introduce: user?.data.introduce,
-                    }
-                })
-            }
-        };
+       
         updateSession();
     }, [user, session?.user?.accessToken])
+    useEffect(() => {
+        const interval = setInterval(() => updateSession(), 1000 * 60 * 60)
+        return () => clearInterval(interval)
+      }, [update])
+      useEffect(() => {
+        const visibilityHandler = () =>
+          document.visibilityState === "visible" && update()
+        window.addEventListener("visibilitychange", visibilityHandler, false)
+        return () =>
+          window.removeEventListener("visibilitychange", visibilityHandler, false)
+      }, [update])
     //Search
     const handleSearch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
