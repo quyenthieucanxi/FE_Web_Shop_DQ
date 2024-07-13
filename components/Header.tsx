@@ -614,12 +614,7 @@ const Header = () => {
                                             </div>
                                             <span className="text-sm">Đóng góp ý kiến</span>
                                         </a>
-                                        <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
-                                            <div className="rounded-full bg-gray-300 p-1">
-                                                <MdLogout className="text-gray-500" size="16px" />
-                                            </div>
-                                            <span className="text-sm">Đăng xuất</span>
-                                        </a>
+                                       
                                     </div>
                                 </div>
                             )}
