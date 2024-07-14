@@ -46,7 +46,7 @@ export default function DashBoardPage() {
     const queryClient = useQueryClient();
     const fetchData = async (): Promise<OrderList> => {
         try {
-            const res = await axiosAuth.get(`/api/Order/GetAll`)
+            const res = await axiosAuth.get(`/api/Order/GetAllBySeller`)
             return res.data.data
         } catch (error) {
             console.log(error);
