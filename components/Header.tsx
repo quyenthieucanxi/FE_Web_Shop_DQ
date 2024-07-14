@@ -243,10 +243,12 @@ const Header = () => {
         }
     };
     useEffect(() => {
-        updateSession();
+        if (session?.user?.accessToken && user)
+        {
+            updateSession();
+        }
         console.log("session updated")
     }, [user, session?.user?.accessToken])
-    console.log(user)
     
     useEffect(() => {
         const interval = setInterval(() => updateSession(), 1000 * 60 * 60)
@@ -281,8 +283,6 @@ const Header = () => {
             router.push(`/${dataCategories[0]?.categoryPath}?search=${search}`);
         }
     }
-
-
     const handleChangeTabNotify = (event: React.SyntheticEvent, newValue: string) => {
         setValueTabNotify(newValue)
         queryClient.invalidateQueries({ queryKey: ['queryNotifies', notifies,valueTabNotify] });
