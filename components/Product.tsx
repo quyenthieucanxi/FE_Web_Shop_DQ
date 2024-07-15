@@ -4,6 +4,7 @@ import { FormatCurrencyVND, makeSlug } from "@/utils/StringHelper";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import { CalculateTimePassedAsync } from "@/utils/DateHelper";
+import { signIn, useSession } from 'next-auth/react';
 interface Props {
     product: Product,
     typeDisplay: string,
@@ -11,34 +12,42 @@ interface Props {
 
 export default function Product(Props: Props) {
     const time= CalculateTimePassedAsync(Props.product?.createdTime)
+    const {data: session} = useSession()
     const typeDisplay = Props.typeDisplay;
     const axiosAuth = useAxiosAuth()
     const hanldeLikeClick = async () => {
-        try {
-            const res = await axiosAuth.post(`/api/User/AddLikePost?postId=${Props.product?.id}`)
-            toast.success("Lưu tin thành công", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            })
+        if (session)
+        {
+            try {
+                const res = await axiosAuth.post(`/api/User/AddLikePost?postId=${Props.product?.id}`)
+                toast.success("Lưu tin thành công", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
+            }
+            catch (error) {
+                toast.error(error?.response?.data?.message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                })
+            }
         }
-        catch (error) {
-            toast.info("Tin đã được lưu", {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "light",
-            })
+        else {
+            signIn()
         }
+        
     }
     return (
         <>
