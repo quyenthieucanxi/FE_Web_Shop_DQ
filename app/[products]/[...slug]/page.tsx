@@ -17,7 +17,7 @@ import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import Toast from "@/components/Toast";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ProductReview from "@/components/ProductReview";
@@ -99,40 +99,46 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
 
 
     const handleLikePost = async (postId: string) => {
-        try {
-            if (isLiked) {
-                const res = await axiosAuth.delete(`/api/User/RemoveSavesPost?postId=${postId}`)
-                toast.success("Đã huỷ lưu tin này", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                })
-                setIsLiked(false)
+        if (session)
+        {
+            try {
+                if (isLiked) {
+                    const res = await axiosAuth.delete(`/api/User/RemoveSavesPost?postId=${postId}`)
+                    toast.success("Đã huỷ lưu tin này", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    })
+                    setIsLiked(false)
+                }
+                else {
+                    const res = await axiosAuth.post(`/api/User/AddLikePost?postId=${postId}`)
+                    toast.success("Tin đã được lưu", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "light",
+                    })
+                    setIsLiked(true)
+                }
+    
+    
             }
-            else {
-                const res = await axiosAuth.post(`/api/User/AddLikePost?postId=${postId}`)
-                toast.success("Tin đã được lưu", {
-                    position: "top-right",
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                })
-                setIsLiked(true)
+            catch (error) {
+    
             }
-
-
         }
-        catch (error) {
-
+        else {
+            signIn()
         }
     }
     return (
