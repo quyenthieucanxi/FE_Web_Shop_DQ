@@ -85,7 +85,7 @@ export default function PostPage() {
                 setSelectedImage(null)
             }
             catch (error) {
-                toast.error(error.response.data.Message, {
+                toast.error(error.response.data.message, {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -98,7 +98,7 @@ export default function PostPage() {
             }
         }
         catch (error) {
-            console.error("Loi", error)
+            console.error("Loi", error.response)
         }
 
     }

@@ -45,7 +45,7 @@ export default function MyLikePostPage() {
         }
     }
     return (
-        <div className="mx-auto bg-white max-w-[960px] mt-16 p-4 h-screen">
+        <div className="mx-auto bg-white max-w-[960px] mt-16 p-4 h-screen overflow-y-auto ">
             <Toast />
             <h1 className="text-lg font-bold">
                 Tin đăng đã lưu ({data?.data?.totalPost})
@@ -53,11 +53,11 @@ export default function MyLikePostPage() {
             {
                 status === "pending" ?
                     <Loading /> :
-                    <div className="mt-2">
+                    <div className="m-2  ">
                         {
                             data?.data?.postList?.map((product, i) => (
                                 <div key={i} >
-                                    <Link href={`/${makeSlug(product.categoryName)}/${product.postPath}`} className='mx-auto max-w-[960px] bg-white border rounded-md p-3 flex gap-3 mb-2 hover:shadow-lg'>
+                                    <Link href={`/${makeSlug(product.categoryName)}/${product.postPath}`} className='mx-auto max-w-[960px] bg-white border rounded-md p-3 flex gap-3 mb-2 hover:shadow-lg '>
                                         <div className=" h-[100px] w-[100px] min-w-[100px] rounded ">
                                             <img src={product.urlImage} alt={product.title} className="h-full w-full rounded object-cover" />
                                         </div>

@@ -99,6 +99,5 @@ export default function LabTabs(props: Props) {
             </Box>
         </TabContext >
         </>
-        
     )
 }

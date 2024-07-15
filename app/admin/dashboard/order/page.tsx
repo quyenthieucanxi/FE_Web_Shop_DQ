@@ -10,7 +10,7 @@ import Toast from "@/components/Toast";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { useSession } from "next-auth/react";
 import { OrderList } from "@/types/order";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const StickyHeadTable = dynamic(() => import("@/components/Table"), { ssr: false });
@@ -41,6 +41,7 @@ interface Column {
 export default function DashBoardPage() {
     const [selectedStatus, setSelectedStatus] = useState<string>("");
     const [selectedRow, setSelectedRow] = useState<string>("");
+    const [filteredOrders, setFilteredOrders] = useState<OrderList | null>(null);
     const axiosAuth = useAxiosAuth();
     const { data: session } = useSession();
     const queryClient = useQueryClient();
@@ -52,12 +53,14 @@ export default function DashBoardPage() {
             console.log(error);
         }
     }
+   
     const { data, status } = useQuery({
         queryKey: ['order'],
-        queryFn: fetchData,
+        queryFn: fetchData ,
         placeholderData: keepPreviousData,
         enabled: !!session?.user?.accessToken,
     })
+    
 
     const onSelectRow = (rowId: string) => {
         setSelectedRow(rowId);
@@ -98,6 +101,13 @@ export default function DashBoardPage() {
             })
         }
     };
+    const handleFilterStatus = async () => {
+        if (data &&  selectedStatus )
+        {
+            
+        }
+    }
+
     return (
         <>
             <Toast />
@@ -119,13 +129,14 @@ export default function DashBoardPage() {
                     <button onClick={handleUpdateStatus} className='bg-green-500 p-2 text-xs text-white flex items-center rounded ml-5'>
                         Xác nhận
                     </button>
+                    <button onClick={handleFilterStatus} className='bg-green-500 p-2 text-xs text-white flex items-center rounded ml-5'>
+                        Lọc
+                    </button>
                 </div>
                 {
-                    status === "pending" ? <Loading /> : <StickyHeadTable columns={columns} rows={data?.orderList} onSelect={onSelectRow} />
+                     <StickyHeadTable columns={columns} rows={data?.orderList} onSelect={onSelectRow} />
                 }
             </div>
         </>
-
-
     )
 }

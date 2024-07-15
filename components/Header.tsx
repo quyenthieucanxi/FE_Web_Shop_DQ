@@ -461,12 +461,7 @@ const Header = () => {
                                         </div>
                                         <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Quản lý đơn hàng</div>
                                         <div className="flex flex-col">
-                                            <Link href="/order" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
-                                                <div className="rounded-full bg-blue-400 p-1">
-                                                    <MdOutlineShoppingBag className="text-white" size="16px" />
-                                                </div>
-                                                <span className="text-sm">Đơn mua</span>
-                                            </Link>
+                                            
                                             <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                                 <div className="rounded-full bg-green-400 p-1">
                                                     <FaMoneyCheckDollar className="text-white" size="16px" />
@@ -574,23 +569,17 @@ const Header = () => {
                                     <div className="border-t border-slate-500/30"></div>
                                     <div className="flex justify-around">
                                         <div className="flex flex-col items-center justify-center">
-                                            <span className="text-base font-semibold">268</span>
+                                            <span className="text-base font-semibold">0</span>
                                             <span className="text-xs text-slate-400">Người theo dõi</span>
                                         </div>
                                         <div className="border-l border-slate-500/30 h-8 mx-3"></div>
                                         <div className="flex flex-col items-center justify-center">
-                                            <span className="text-base font-semibold">897</span>
+                                            <span className="text-base font-semibold">0</span>
                                             <span className="text-xs text-slate-400">Đang theo dõi</span>
                                         </div>
                                     </div>
                                     <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Quản lý đơn hàng</div>
                                     <div className="flex flex-col">
-                                        <Link href="/order" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
-                                            <div className="rounded-full bg-blue-400 p-1">
-                                                <MdOutlineShoppingBag className="text-white" size="16px" />
-                                            </div>
-                                            <span className="text-sm">Đơn mua</span>
-                                        </Link>
                                         <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
                                             <div className="rounded-full bg-green-400 p-1">
                                                 <FaMoneyCheckDollar className="text-white" size="16px" />

@@ -41,7 +41,7 @@ export default function ShopPage() {
             })
             
         } catch (error) {
-            toast.error(error.response.data.Message, {
+            toast.error(error.response.data.message, {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
