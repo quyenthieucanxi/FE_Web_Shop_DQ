@@ -96,7 +96,24 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
         placeholderData: keepPreviousData,
     })
 
-
+    const handleOrder = () => {
+        if (quantity > dataProduct?.quantity)
+        {
+            toast.warning("Số lượng không hợp lệ", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+            return;
+        }
+        router.push(`/order/checkout?itemKeys=${dataProduct?.id}&quantity=${quantity}`);
+        router.refresh();
+    }
 
     const handleLikePost = async (postId: string) => {
         if (session)
@@ -209,14 +226,11 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                             <span className="w-[110px]">Số lượng</span>
                                             <button disabled={quantity === 1} onClick={handleMinusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><HiMinus />
                                             </button>
-                                            <input type="text" value={quantity} readOnly className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
+                                            <input onChange={(e) => setQuantity(Number.parseInt(e.target.value))} type="text" value={quantity}  className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
                                             <button disabled={quantity === dataProduct?.quantity} onClick={handlePlusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><GoPlus /></button>
                                         </div>
                                         <div className="mt-3">
-                                            <Button onClick={() => {
-                                                router.push(`/order/checkout?itemKeys=${dataProduct?.id}&quantity=${quantity}`);
-                                                router.refresh();
-                                            }} type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
+                                            <Button onClick={handleOrder } type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
                                         </div>
                                     </>
                                 }

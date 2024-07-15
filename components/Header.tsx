@@ -201,11 +201,33 @@ const Header = () => {
                 queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
                 setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
             });
+            connection.on("ReceiveNotificationUpdateStatusOrder", (notifyTemp) => {
+                queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+            });
+            if ( session?.user?.role == "Admin")
+            {
+                connection.on("ReceiveNotificationCreatePost", (notifyTemp) => {
+                    queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                    setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+                });
+            }
+            if ( session?.user?.role == "Seller")
+            {
+                connection.on("ReceiveNotificationCreateOrder", (notifyTemp) => {
+                    queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                    setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+                });
+            }
+            
         }
         return () => {
             if (connection) {
                 connection.off("ReceiveMessage");
                 connection.off("ReceiveNotification");
+                connection.off("ReceiveNotificationCreatePost");
+                connection.off("ReceiveNotificationCreateOrder");
+                connection.off("ReceiveNotificationUpdateStatusOrder");
                 connection.stop();
             }
         };

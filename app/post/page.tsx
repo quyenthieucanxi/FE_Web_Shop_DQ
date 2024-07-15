@@ -13,9 +13,11 @@ import { toast } from "react-toastify";
 import axios from "@/libs/axios";
 import { convertToVND, makeSlug } from "@/utils/StringHelper";
 import ModalAddress from "@/components/ModalAddress";
+import { useSession } from "next-auth/react";
 
 export default function PostPage() {
     const axiosAuth = useAxiosAuth();
+    const {data: session} = useSession();
     const [isModalOpen, setIsModalOpen] = useState(true);
     const openModal = () => {
         setIsModalOpen(true);
@@ -48,6 +50,20 @@ export default function PostPage() {
     };
     const HandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (session?.user?.phone.length  < 1)
+        {
+            toast.info("Vui lòng cập nhập đầy đủ thông tin cá nhân", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })  
+            return ;
+        }
         const formData = new FormData(e.currentTarget);
         
         try {
