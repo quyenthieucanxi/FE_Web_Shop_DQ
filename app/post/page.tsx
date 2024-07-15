@@ -50,7 +50,7 @@ export default function PostPage() {
     };
     const HandleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (session?.user?.phone.length  < 1)
+        if (session?.user?.phone?.length  < 1)
         {
             toast.info("Vui lòng cập nhập đầy đủ thông tin cá nhân", {
                 position: "top-right",
