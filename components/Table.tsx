@@ -100,7 +100,7 @@ export default function StickyHeadTable({ columns, rows, handleConfirm, handleUp
                                                     }
                                                     {
                                                         column.id === 'checkbox' && (
-                                                            <input  onChange={() => onSelect(row.id)} name='checkbox' type="checkbox" />
+                                                            <input   onChange={() => onSelect(row.id)} name='checkbox' type="checkbox" />
                                                         )
                                                     }
                                                     {

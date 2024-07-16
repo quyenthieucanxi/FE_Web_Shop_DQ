@@ -2,7 +2,6 @@
 
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query"
 import dynamic from "next/dynamic";
-import Loading from "@/components/Loading";
 import { ConvertToDDMMYYYY } from "@/utils/DateHelper";
 import { FormatCurrencyVND } from "@/utils/StringHelper";
 import { toast } from "react-toastify";

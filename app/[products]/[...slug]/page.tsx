@@ -16,6 +16,8 @@ import { FormatCurrencyVND } from "@/utils/StringHelper";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import Toast from "@/components/Toast";
+import ImageGallery from "react-image-gallery";
+import "react-image-gallery/styles/css/image-gallery.css";
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -43,6 +45,13 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
         queryFn: fetchData,
         placeholderData: keepPreviousData,
     })
+    const images =
+        dataProduct?.files?.map(file => {
+            return {
+                original: file?.url
+            }
+        })
+
     const CheckLikePost = async () => {
         try {
             const res = await axiosAuth.get(`/api/User/CheckSavesPost?pathPost=${params.slug[0]}`)
@@ -97,8 +106,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
     })
 
     const handleOrder = () => {
-        if (quantity > dataProduct?.quantity)
-        {
+        if (quantity > dataProduct?.quantity) {
             toast.warning("Số lượng không hợp lệ", {
                 position: "top-right",
                 autoClose: 3000,
@@ -116,8 +124,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
     }
 
     const handleLikePost = async (postId: string) => {
-        if (session)
-        {
+        if (session) {
             try {
                 if (isLiked) {
                     const res = await axiosAuth.delete(`/api/User/RemoveSavesPost?postId=${postId}`)
@@ -147,11 +154,11 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                     })
                     setIsLiked(true)
                 }
-    
-    
+
+
             }
             catch (error) {
-    
+
             }
         }
         else {
@@ -163,15 +170,12 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
             <Toast />
             {
                 isSuccess ? <>
+
                     <section>
-                        <div className="mx-auto p-4 bg-white rounded-md max-w-[960px] mt-20">
-                            <Slider />
-                        </div>
-                    </section>
-                    <section>
-                        <div className="flex mx-auto max-w-[960px] bg-white pt-12 mb-6">
+                        <div className="flex mx-auto max-w-[960px] bg-white pt-12 mb-6 mt-20">
                             <div className="w-[66.66666667%] px-[18px]">
-                                <img className="w-full  object-cover" src={dataProduct?.urlImage} alt="" />
+                                <img className="w-full  object-cover my-3" src={dataProduct?.urlImage} alt="" />
+                                <ImageGallery items={images} />
                                 <div>
                                     <h1 className="font-bold text-base  mt-[20px] mb-[10px]">{dataProduct?.title}</h1>
                                     <div className="flex justify-between">
@@ -226,11 +230,11 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                             <span className="w-[110px]">Số lượng</span>
                                             <button disabled={quantity === 1} onClick={handleMinusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><HiMinus />
                                             </button>
-                                            <input onChange={(e) => setQuantity(Number.parseInt(e.target.value))} type="text" value={quantity}  className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
+                                            <input onChange={(e) => setQuantity(Number.parseInt(e.target.value))} type="text" value={quantity} className="w-[50px] h-[32px] text-base font-normal text-center cursor-text border-l-0 border-r-0 border border-solid " />
                                             <button disabled={quantity === dataProduct?.quantity} onClick={handlePlusQuantity} className="w-[32px] h-[32px] border border-solid rounded-sm pt-[1px] px-[6px]"><GoPlus /></button>
                                         </div>
                                         <div className="mt-3">
-                                            <Button onClick={handleOrder } type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
+                                            <Button onClick={handleOrder} type="secondary" childern={"MUA NGAY"} className="text-sm font-bold text-white border-1 border-green-600" />
                                         </div>
                                     </>
                                 }

@@ -8,6 +8,8 @@ import { FormatCurrencyVND } from "@/utils/StringHelper";
 import { GetAll, UpdateStatus } from "@/services/PostService"
 import Toast from "@/components/Toast";
 import { toast } from "react-toastify";
+import { useSession } from "next-auth/react";
+import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 
 
 const StickyHeadTable = dynamic(() => import("@/components/Table"), { ssr: false });
@@ -31,6 +33,8 @@ const columns: Column[] = [
     { id: 'cancel', label: '', minWidth: 100 },
 ];
 export default function DashBoardPage() {
+    const {data: session} = useSession()
+    const axiosAuth = useAxiosAuth();
     const queryClient = useQueryClient();
     const fetchData = async () => {
         const res = await GetAll()
@@ -40,11 +44,12 @@ export default function DashBoardPage() {
     const { data, isPlaceholderData, status } = useQuery({
         queryKey: ['post'],
         queryFn: fetchData,
+        enabled: !!session?.user?.accessToken
     })
 
     const handleConfirmClick = async (rowId: string) => {
         try {
-            const res = await UpdateStatus(rowId, "Đang hiển thị");
+            const res = await axiosAuth.put(`/api/Post/UpdateStatus/${rowId}?status=Đang hiển thị`)
             queryClient.invalidateQueries({queryKey: ['post']});
             toast.success("Duyệt thành công", {
                 position: "top-right",
@@ -63,7 +68,7 @@ export default function DashBoardPage() {
     };
     const handleCancelClick = async (rowId: string) => {
         try {
-            const res = await UpdateStatus(rowId, "Huỷ");
+            const res = await axiosAuth.put(`/api/Post/UpdateStatus/${rowId}?status=Huỷ`)
             queryClient.invalidateQueries({queryKey: ['post']});
             toast.success("Tin đã được huỷ", {
                 position: "top-right",

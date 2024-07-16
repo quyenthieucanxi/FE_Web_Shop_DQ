@@ -118,15 +118,16 @@ export default function CheckoutOrderPage() {
     }
     const totalPrice = quantity * Number.parseInt(post?.price) + fee;
     const handleOrder = async () => {
-        const order = {
-            productId: post?.id,
-            addressShippingID: addressDefaut?.id,
-            quantity: quantity,
-            totalPrice: totalPrice,
-            payment: "Chờ thanh toán",
-            note: note,
-        }
+        
         if (selectedPayment === "Thanh toán khi nhận hàng") {
+            const order = {
+                productId: post?.id,
+                addressShippingID: addressDefaut?.id,
+                quantity: quantity,
+                totalPrice: totalPrice,
+                payment: "Thanh toán khi nhận hàng",
+                note: note,
+            }
             try {
                 const res = await axiosAuth.post(`/api/Order/Create`, order)
                 toast.success("Đặt hàng thành công", {
@@ -153,6 +154,14 @@ export default function CheckoutOrderPage() {
             }
         }
         else {
+            const order = {
+                productId: post?.id,
+                addressShippingID: addressDefaut?.id,
+                quantity: quantity,
+                totalPrice: totalPrice,
+                payment: "Chờ thanh toán",
+                note: note,
+            }
             try {
                 const res = await axiosAuth.post(`/api/Order/CreateUrlPayment`,order)
                 const response : Response = res.data

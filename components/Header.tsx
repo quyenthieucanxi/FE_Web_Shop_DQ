@@ -205,9 +205,21 @@ const Header = () => {
                 queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
                 setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
             });
+            connection.on("ReceiveNotificationUpdateStatusPost", (notifyTemp) => {
+                queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+            });
             if ( session?.user?.role == "Admin")
             {
                 connection.on("ReceiveNotificationCreatePost", (notifyTemp) => {
+                    queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                    setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+                });
+                connection.on("ReceiveNotificationUpdateStatusShop", (notifyTemp) => {
+                    queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                    setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+                });
+                connection.on("ReceiveNotificationCreateShop", (notifyTemp) => {
                     queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
                     setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
                 });
@@ -227,7 +239,10 @@ const Header = () => {
                 connection.off("ReceiveNotification");
                 connection.off("ReceiveNotificationCreatePost");
                 connection.off("ReceiveNotificationCreateOrder");
+                connection.off("ReceiveNotificationCreateShop");
                 connection.off("ReceiveNotificationUpdateStatusOrder");
+                connection.off("ReceiveNotificationUpdateStatusShop")
+                connection.off("ReceiveNotificationUpdateStatusPost")
                 connection.stop();
             }
         };

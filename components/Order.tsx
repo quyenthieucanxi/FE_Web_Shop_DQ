@@ -98,6 +98,10 @@ export default function Order(props: Props) {
                                     props.order?.status === "Chờ xác nhận" &&
                                     <Button onClick={handleCancelOrder} className="mt-4" childern={`Huỷ`} ></Button>
                                 }
+                                {/* {
+                                    props.order?.status === "Đánh giá" &&
+                                    <Button onClick={handleCancelOrder} className="mt-4" childern={`Trả hàng`} ></Button>
+                                } */}
                             </div>
                         </div>
                     </Link>

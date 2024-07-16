@@ -59,7 +59,7 @@ export default function OrderTransactionPage() {
                     <button onClick={() => { router.replace("/") }} className="bg-orange-400 text-white px-6 py-2 rounded ml-6 flex items-center justify-center space-x-2 w-[30%]">
                         <span className='text-sm max-md:text-xs '>Trang Chủ</span>
                     </button>
-                    <button onClick={() => { router.replace(`/order/detail/${vnp_TxnRef}`) }} className="bg-orange-400 text-white px-6 py-2 rounded ml-6 flex items-center justify-center space-x-2 w-[30%]">
+                    <button onClick={() => { router.replace(`/order/${vnp_TxnRef}`) }} className="bg-orange-400 text-white px-6 py-2 rounded ml-6 flex items-center justify-center space-x-2 w-[30%]">
                         <span className='text-sm max-md:text-xs '>Đơn mua</span>
                     </button>
                 </div>

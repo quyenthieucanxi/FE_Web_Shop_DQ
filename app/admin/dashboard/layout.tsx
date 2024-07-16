@@ -36,6 +36,12 @@ export default function DashBoardLayout({
                                         </div>
                                         <span className="text-sm font-medium">Duyệt bài đăng</span>
                                     </Link>
+                                    <Link href="/admin/dashboard/shop" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300 border-b">
+                                        <div className="rounded-full bg-gray-300 p-1">
+                                            <MdOutlineEventNote className="text-gray-500" size="16px" />
+                                        </div>
+                                        <span className="text-sm font-medium">Duyệt cửa hàng</span>
+                                    </Link>
                                     <Link href="/admin/dashboard/category" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300 border-b">
                                         <div className="rounded-full bg-gray-300 p-1">
                                             <BiCategoryAlt className="text-gray-500" size="16px" />
@@ -55,6 +61,10 @@ export default function DashBoardLayout({
                                 <Link href="/admin/dashboard/order" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300">
                                     <HiOutlineShoppingBag className="text-gray-500" size="24px" />
                                     <span className="text-sm font-medium">Đanh sách đơn hàng</span>
+                                </Link>
+                                <Link href="/admin/dashboard/order" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300">
+                                    <HiOutlineShoppingBag className="text-gray-500" size="24px" />
+                                    <span className="text-sm font-medium">Đanh sách đơn hàng hoàn trả</span>
                                 </Link>
                             </>
                         }
