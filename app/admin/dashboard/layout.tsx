@@ -62,7 +62,7 @@ export default function DashBoardLayout({
                                     <HiOutlineShoppingBag className="text-gray-500" size="24px" />
                                     <span className="text-sm font-medium">Đanh sách đơn hàng</span>
                                 </Link>
-                                <Link href="/admin/dashboard/order" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300">
+                                <Link href="/admin/dashboard/order/return" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300">
                                     <HiOutlineShoppingBag className="text-gray-500" size="24px" />
                                     <span className="text-sm font-medium">Đanh sách đơn hàng hoàn trả</span>
                                 </Link>

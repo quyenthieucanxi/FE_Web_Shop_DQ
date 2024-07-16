@@ -50,6 +50,35 @@ export default function Order(props: Props) {
             })
         }
     }
+    const handleReturnOrder = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await axiosAuth.put(`/api/Order/UpdateStatus?status=Yêu cầu trả hàng&orderId=${props?.order?.id}`)
+            toast.success("Yêu cầu trả hàng thành công", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+            router.refresh()
+        }
+        catch (err) {
+            toast.error(err.response.data.message, {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+        }
+    }
         return (
             <>
                 <Toast />
@@ -98,10 +127,10 @@ export default function Order(props: Props) {
                                     props.order?.status === "Chờ xác nhận" &&
                                     <Button onClick={handleCancelOrder} className="mt-4" childern={`Huỷ`} ></Button>
                                 }
-                                {/* {
+                                {
                                     props.order?.status === "Đánh giá" &&
-                                    <Button onClick={handleCancelOrder} className="mt-4" childern={`Trả hàng`} ></Button>
-                                } */}
+                                    <Button onClick={handleReturnOrder} className="mt-4" childern={`Trả hàng`} ></Button>
+                                }
                             </div>
                         </div>
                     </Link>

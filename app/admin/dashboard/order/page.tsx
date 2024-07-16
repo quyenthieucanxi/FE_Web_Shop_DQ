@@ -8,8 +8,9 @@ import { toast } from "react-toastify";
 import Toast from "@/components/Toast";
 import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { useSession } from "next-auth/react";
-import { OrderList } from "@/types/order";
+import { Order, OrderList } from "@/types/order";
 import { useEffect, useState } from "react";
+
 
 
 const StickyHeadTable = dynamic(() => import("@/components/Table"), { ssr: false });
@@ -40,7 +41,7 @@ interface Column {
 export default function DashBoardPage() {
     const [selectedStatus, setSelectedStatus] = useState<string>("");
     const [selectedRow, setSelectedRow] = useState<string>("");
-    const [filteredOrders, setFilteredOrders] = useState<OrderList | null>(null);
+    const [orderFilter, setOrderFilter] = useState<OrderList>(null)
     const axiosAuth = useAxiosAuth();
     const { data: session } = useSession();
     const queryClient = useQueryClient();
@@ -52,10 +53,20 @@ export default function DashBoardPage() {
             console.log(error);
         }
     }
+    const fetchDataByStatus = async (status?: string) => {
+        try {
+
+                const res = await axiosAuth.get(`/api/Order/GetAllBySeller?status=${status}`)
+                setOrderFilter(res.data.data as OrderList)
+    
+        } catch (error) {
+            console.log(error);
+        }
+    }
    
     const { data, status } = useQuery({
         queryKey: ['order'],
-        queryFn: fetchData ,
+        queryFn:  fetchData  ,
         placeholderData: keepPreviousData,
         enabled: !!session?.user?.accessToken,
     })
@@ -66,16 +77,16 @@ export default function DashBoardPage() {
     }
 
     const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedStatus(event.target.value);
+        const value = event.target.value.trim()
+        setSelectedStatus(value);
     };
-
     const handleUpdateStatus = async () => {
-        if (!selectedStatus) {
+        if (!selectedStatus || selectedRow.length < 1) {
             return;
           }
         try {
             const res = await axiosAuth.put(`/api/Order/UpdateStatus?status=${selectedStatus}&orderId=${selectedRow}`)
-            queryClient.invalidateQueries({ queryKey: ['order']});
+            queryClient.invalidateQueries({queryKey: ['order']});
             toast.success("Cập nhật thành công", {
                 position: "top-right",
                 autoClose: 3000,
@@ -86,6 +97,26 @@ export default function DashBoardPage() {
                 progress: undefined,
                 theme: "light",
             })
+            // queryClient.setQueryData<OrderList>(['order'], oldData => {
+            //     console.log("Old data: ", oldData); // Thêm log để kiểm tra dữ liệu cũ
+            //     if (!oldData) return oldData;
+            
+            //     const updatedOrderList = oldData.orderList.map(order => {
+            //         if (order.id === selectedRow) {
+            //             return { ...order, status: selectedStatus };
+            //         }
+            //         return order;
+            //     });
+            
+            //     const newData = {
+            //         ...oldData,
+            //         orderList: updatedOrderList,
+            //     };
+                
+            //     console.log("New data: ", newData); // Thêm log để kiểm tra dữ liệu mới
+            //     return newData;
+            // });
+            
         }
         catch (err) {
             toast.error("Cập nhật thất bại", {
@@ -103,10 +134,17 @@ export default function DashBoardPage() {
     const handleFilterStatus = async () => {
         if (data &&  selectedStatus )
         {
-            
+            fetchDataByStatus(selectedStatus)
         }
     }
-
+    const handleFilterAll = async () => {
+        if (data &&  selectedStatus )
+        {
+            const res =  await fetchData()
+            setOrderFilter(res)
+        }
+    }
+    
     return (
         <>
             <Toast />
@@ -131,9 +169,12 @@ export default function DashBoardPage() {
                     <button onClick={handleFilterStatus} className='bg-green-500 p-2 text-xs text-white flex items-center rounded ml-5'>
                         Lọc
                     </button>
+                    <button onClick={handleFilterAll} className='bg-green-500 p-2 text-xs text-white flex items-center rounded ml-5'>
+                        Lọc Tất cả
+                    </button>
                 </div>
-                {
-                     <StickyHeadTable columns={columns} rows={data?.orderList} onSelect={onSelectRow} />
+                { data && status === 'success' &&
+                     <StickyHeadTable columns={columns} rows={orderFilter?.orderList || data?.orderList} onSelect={onSelectRow} />
                 }
             </div>
         </>
