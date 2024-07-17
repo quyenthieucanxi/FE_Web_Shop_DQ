@@ -93,6 +93,4 @@ export default function ChatPage() {
     )
 }
 
-function useHUb(): { connection: any; } {
-    throw new Error("Function not implemented.");
-}
+
