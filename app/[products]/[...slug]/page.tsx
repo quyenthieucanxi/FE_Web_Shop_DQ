@@ -206,8 +206,11 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                     {dataProduct?.description}
                                 </div>
                                 <div className="mt-3">
-                                    Khu vực
-                                    {dataProduct?.user?.address}
+                                    <h5 className=" font-bold pb-[5px] text-[#8f8297]">Khu vực </h5>
+                                    <div>
+                                            {dataProduct?.user?.address}
+                                    </div>
+                                    
                                 </div>
                             </div>
                             <div className="w-[33.3333333%] pr-[15px] border-t p-2">
