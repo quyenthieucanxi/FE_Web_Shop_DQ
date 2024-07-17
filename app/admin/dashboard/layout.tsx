@@ -36,6 +36,12 @@ export default function DashBoardLayout({
                                         </div>
                                         <span className="text-sm font-medium">Duyệt bài đăng</span>
                                     </Link>
+                                    <Link href="/admin/dashboard/postTrend" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300 border-b">
+                                        <div className="rounded-full bg-gray-300 p-1">
+                                            <MdOutlineEventNote className="text-gray-500" size="16px" />
+                                        </div>
+                                        <span className="text-sm font-medium">Duyệt tin nổi bật</span>
+                                    </Link>
                                     <Link href="/admin/dashboard/shop" className="flex items-center gap-3 rounded-md py-2 px-2 hover:bg-slate-300 border-b">
                                         <div className="rounded-full bg-gray-300 p-1">
                                             <MdOutlineEventNote className="text-gray-500" size="16px" />
@@ -48,6 +54,7 @@ export default function DashBoardLayout({
                                         </div>
                                         <span className="text-sm font-medium">Danh sách danh mục</span>
                                     </Link>
+                                    
                                 </>
                             )
                         }

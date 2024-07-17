@@ -12,6 +12,8 @@ interface Product {
     address: string,
     status: string,
     quantity: number,
+    isTrend: boolean,
+    requestTrend: string,
     createdTime: string,
     modifiedTime?: string,
     user: User,

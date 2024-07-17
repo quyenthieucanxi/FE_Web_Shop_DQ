@@ -17,7 +17,10 @@ export const GetPostByPath = async (path: string) => {
     const res = await axios.get(`/api/Post/GetByPath?pathPost=${path}`)
     return res.data
 }
-
+export const GetPostsTrend= async (page?: number, limit?: number) => {
+    const res = await axios.get(`/api/Post/GetAllTrend?page=${page}&limit=${limit}`)
+    return res.data;
+}
 export const GetPostByStatus = async (status: string, page?: number, limit?: number) => {
     const res = await axios.get(`/api/Post/GetByStatus?${page && limit ? `page=${page}&limit=${limit}&status=${status}` : `status=${status}`} `)
     return res.data;

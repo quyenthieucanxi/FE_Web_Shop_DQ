@@ -2,7 +2,7 @@
 import { IoMenuSharp } from 'react-icons/io5';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { CiShop } from "react-icons/ci";
-import { IoMdNotificationsOutline, IoMdChatbubbles, IoMdSettings } from 'react-icons/io';
+import { IoMdNotificationsOutline, IoMdChatbubbles, IoMdSettings, IoIosTrendingUp } from 'react-icons/io';
 import { BiMessageAltDetail, BiSolidHelpCircle } from 'react-icons/bi';
 import { HiOutlineShoppingBag } from 'react-icons/hi';
 import { MdLogout, MdOutlineShoppingBag } from "react-icons/md";
@@ -209,12 +209,17 @@ const Header = () => {
                 queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
                 setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
             });
+            connection.on("ReceiveNotificationCreateRequestTrend", (notifyTemp) => {
+                queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
+                setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
+            });
             if ( session?.user?.role == "Admin")
             {
                 connection.on("ReceiveNotificationCreatePost", (notifyTemp) => {
                     queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
                     setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
                 });
+                
                 connection.on("ReceiveNotificationUpdateStatusShop", (notifyTemp) => {
                     queryClient.invalidateQueries({ queryKey: ["countNotifysIsNotRead"] });
                     setNotifies(prevNotifies => [notifyTemp, ...prevNotifies]);
@@ -238,6 +243,7 @@ const Header = () => {
                 connection.off("ReceiveMessage");
                 connection.off("ReceiveNotification");
                 connection.off("ReceiveNotificationCreatePost");
+                connection.off("ReceiveNotificationCreateRequestTrend");
                 connection.off("ReceiveNotificationCreateOrder");
                 connection.off("ReceiveNotificationCreateShop");
                 connection.off("ReceiveNotificationUpdateStatusOrder");
@@ -507,6 +513,14 @@ const Header = () => {
                                             </Link>
                                         </div>
                                         <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Dịch vụ</div>
+                                        <div className="flex flex-col hover:cursor-pointer">
+                                            <Link href="/postTrend" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300" >
+                                                <div className="rounded-full bg-gray-300 p-1">
+                                                    <IoIosTrendingUp  className="text-gray-500" size="16px" />
+                                                </div>
+                                                <span className="text-sm">Tin nổi bật</span>
+                                            </Link>
+                                        </div>
                                         <div className="flex flex-col hover:cursor-pointer">
                                             {
                                                 session?.user?.role === "User" &&

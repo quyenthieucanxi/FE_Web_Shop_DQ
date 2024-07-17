@@ -6,6 +6,7 @@ import { options } from "./api/auth/[...nextauth]/options";
 import TabCategory from "@/components/TabCategrory";
 import ListProducts from "@/components/ListProducts";
 import Toast from "@/components/Toast";
+import ListProductsTrend from "@/components/ListProductTrend";
 
 const Slider = dynamic(() => import("@/components/Slider"), { ssr: true });
 
@@ -26,10 +27,15 @@ export default async function Home() {
       </section>
       <section>
         <div className="mx-auto bg-white p-4 mt-4 max-w-[960px]">
+          <h2 className="font-bold text-lg">Tin đăng nổi bật</h2>
+          <ListProductsTrend   />
+        </div>
+      </section>
+      <section>
+        <div className="mx-auto bg-white p-4 mt-4 max-w-[960px]">
           <h2 className="font-bold text-lg">Tin đăng dành cho bạn</h2>
           <ListProducts />
         </div>
-
       </section>
       <section>
         <div className="mx-auto bg-white p-4 mt-4 max-w-[960px]">

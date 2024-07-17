@@ -5,19 +5,21 @@ import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import { CalculateTimePassedAsync } from "@/utils/DateHelper";
 import { signIn, useSession } from 'next-auth/react';
+import Button from './Button';
+import Toast from './Toast';
 interface Props {
     product: Product,
     typeDisplay: string,
 }
 
 export default function Product(Props: Props) {
-    const time= CalculateTimePassedAsync(Props.product?.createdTime)
-    const {data: session} = useSession()
+    const time = CalculateTimePassedAsync(Props.product?.createdTime)
+    const { data: session } = useSession()
     const typeDisplay = Props.typeDisplay;
     const axiosAuth = useAxiosAuth()
+    const requestTrend = "Chờ duyệt lên nổi bật"
     const hanldeLikeClick = async () => {
-        if (session)
-        {
+        if (session) {
             try {
                 const res = await axiosAuth.post(`/api/User/AddLikePost?postId=${Props.product?.id}`)
                 toast.success("Lưu tin thành công", {
@@ -47,18 +49,40 @@ export default function Product(Props: Props) {
         else {
             signIn()
         }
-        
+
+    }
+    const hanldeIsTrend = async () => {
+
+        try {
+            const res = await axiosAuth.put(`/api/Post/UpdateRequestTrend/${Props?.product?.id}?status=${requestTrend}`)
+            toast.success("Yêu cầu thành công", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            })
+        }
+        catch (err) {
+
+        }
+
     }
     return (
         <>
+           
             {
                 typeDisplay === "row" ?
                     <div className="flex flex-col hover:cursor-pointer border border-solid  p-3 hover:shadow-md rounded-lg">
+                         <Toast />
                         <div className="relative h-[250px]">
                             <Link className="mb-2" href={`/${Props.product?.categoryPath}/${Props.product?.postPath}`}>
-                                <img className="rounded-sm h-[202px] object-cover" src={Props.product?.urlImage} alt="img" loading="lazy" />            
+                                <img className="rounded-sm h-[202px] object-cover" src={Props.product?.urlImage} alt="img" loading="lazy" />
                                 <div className="max-h-[40px] font-normal text-sm mt-2 line-clamp-2">
-                                    <h3 className=" overflow-hidden overflow-ellipsis h-[40px] max-h-[40px] whitespace-normal inline ">{Props.product?.title}</h3>       
+                                    <h3 className=" overflow-hidden overflow-ellipsis h-[40px] max-h-[40px] whitespace-normal inline ">{Props.product?.title}</h3>
                                 </div>
                             </Link>
                             <button className="absolute right-2 bottom-14" onClick={hanldeLikeClick}>
@@ -80,6 +104,7 @@ export default function Product(Props: Props) {
 
                     </div> :
                     <div className='mx-auto max-w-[960px] bg-white border rounded-md p-3 flex gap-3 mb-2'>
+                         <Toast />
                         <div className=" h-20 w-32 min-w-[80px] rounded md:h-36 md:w-[250px] md:min-w-[250px]">
                             <img src={Props.product?.urlImage} alt="img" className="h-full w-full rounded object-cover" />
                         </div>
@@ -93,6 +118,12 @@ export default function Product(Props: Props) {
                             <div>
                                 <span className="text-xs leading-5 text-gray-500">Ngày đăng tin: <span className="text-gray-900">{ConvertToDDMMYYYY(Props.product?.createdTime)}</span>
                                 </span>
+                            </div>
+                            <div className='flex justify-end w-[300px]'>
+                                {
+                                    !Props.product?.isTrend &&
+                                    <Button onClick={hanldeIsTrend} className="mt-4" childern={`Yêu cầu nổi bật`} ></Button>
+                                }
                             </div>
                         </div>
 
