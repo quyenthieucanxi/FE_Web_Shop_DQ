@@ -27,7 +27,7 @@ export default function Order(props: Props) {
         e.preventDefault();
         try {
             const res = await axiosAuth.put(`/api/Order/UpdateStatus?status=Huỷ&orderId=${props?.order?.id}`)
-            queryClient.invalidateQueries({queryKey: ['post','7']});
+            queryClient.invalidateQueries({queryKey: ['orders','7']});
             toast.success("Huỷ đơn thành công", {
                 position: "top-right",
                 autoClose: 3000,
@@ -57,7 +57,7 @@ export default function Order(props: Props) {
         e.preventDefault();
         try {
             const res = await axiosAuth.put(`/api/Order/UpdateStatus?status=Yêu cầu trả hàng&orderId=${props?.order?.id}`)
-            queryClient.invalidateQueries({queryKey: ['post','8']});
+            queryClient.invalidateQueries({queryKey: ['orders','8']});
             toast.success("Yêu cầu trả hàng thành công", {
                 position: "top-right",
                 autoClose: 3000,

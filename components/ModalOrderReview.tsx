@@ -63,8 +63,8 @@ export default function ModalOrderReview({ isModalOpen, isCloseModal, order }: P
                 rating: rating,
                 reviewText: inputReview.current.value,
             })
-            queryClient.invalidateQueries({queryKey: ['post','6']});
-            toast.success("Đánh giá thành công thành công", {
+            queryClient.invalidateQueries({queryKey: ['orders','6']});
+            toast.success("Đánh giá thành công", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
