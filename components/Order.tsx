@@ -7,6 +7,7 @@ import useAxiosAuth from "@/libs/hooks/useAxiosAuth";
 import { toast } from "react-toastify";
 import Toast from "./Toast";
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from "@tanstack/react-query";
 
 
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
 export default function Order(props: Props) {
     const axiosAuth = useAxiosAuth()
     const router = useRouter();
+    const queryClient = useQueryClient()
     const handleOpenReview = (e) => {
         e.preventDefault();
         props.openModal(props.order?.id)
@@ -25,6 +27,7 @@ export default function Order(props: Props) {
         e.preventDefault();
         try {
             const res = await axiosAuth.put(`/api/Order/UpdateStatus?status=Huỷ&orderId=${props?.order?.id}`)
+            queryClient.invalidateQueries({queryKey: ['post','7']});
             toast.success("Huỷ đơn thành công", {
                 position: "top-right",
                 autoClose: 3000,
@@ -54,6 +57,7 @@ export default function Order(props: Props) {
         e.preventDefault();
         try {
             const res = await axiosAuth.put(`/api/Order/UpdateStatus?status=Yêu cầu trả hàng&orderId=${props?.order?.id}`)
+            queryClient.invalidateQueries({queryKey: ['post','8']});
             toast.success("Yêu cầu trả hàng thành công", {
                 position: "top-right",
                 autoClose: 3000,

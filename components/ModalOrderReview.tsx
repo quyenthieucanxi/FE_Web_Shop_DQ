@@ -12,6 +12,7 @@ import { FormatCurrencyVND } from "@/utils/StringHelper";
 import Star from "./Star";
 import Toast from "./Toast";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 
 
@@ -50,7 +51,7 @@ interface Props {
 export default function ModalOrderReview({ isModalOpen, isCloseModal, order }: Props) {
     const axiosAuth = useAxiosAuth();
     const [rating, setRating] = useState(5);
-
+    const queryClient = useQueryClient()
     const handleClickStar = (star) => {
         setRating(star);
     };
@@ -62,7 +63,8 @@ export default function ModalOrderReview({ isModalOpen, isCloseModal, order }: P
                 rating: rating,
                 reviewText: inputReview.current.value,
             })
-            toast.success("Cập nhập thông tin thành công", {
+            queryClient.invalidateQueries({queryKey: ['post','6']});
+            toast.success("Đánh giá thành công thành công", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
