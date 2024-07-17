@@ -205,6 +205,10 @@ export default function ProductDetailPage({ params }: { params: { slug: string[]
                                 <div className="mt-3">
                                     {dataProduct?.description}
                                 </div>
+                                <div className="mt-3">
+                                    Khu vực
+                                    {dataProduct?.user?.address}
+                                </div>
                             </div>
                             <div className="w-[33.3333333%] pr-[15px] border-t p-2">
                                 <div className="flex gap-3 items-center">
