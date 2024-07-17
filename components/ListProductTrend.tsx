@@ -24,7 +24,7 @@ export default function ListProductsTrend() {
         hasNextPage,
         status
     } = useInfiniteQuery({
-        queryKey: ['query'],
+        queryKey: ['queryInfinitePostsTrend'],
         queryFn: ({ pageParam }) => fetchData(pageParam),
         initialPageParam: 0,
         getNextPageParam: (_, pages) => pages.length + 1,

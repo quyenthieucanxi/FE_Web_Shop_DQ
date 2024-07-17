@@ -66,7 +66,7 @@ export default function ListProducts({ pagination = false, page, catPath, search
         hasNextPage,
         status
     } = useInfiniteQuery({
-        queryKey: ['query'],
+        queryKey: ['queryInfinitePost'],
         queryFn: ({ pageParam }) => fetchData(pageParam),
         initialPageParam: 0,
         initialData: {
