@@ -496,16 +496,7 @@ const Header = () => {
                                                 <span className="text-xs text-slate-400">Đang theo dõi</span>
                                             </div>
                                         </div>
-                                        <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Quản lý đơn hàng</div>
-                                        <div className="flex flex-col">
-                                            
-                                            <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
-                                                <div className="rounded-full bg-green-400 p-1">
-                                                    <FaMoneyCheckDollar className="text-white" size="16px" />
-                                                </div>
-                                                <span className="text-sm">Đơn bán</span>
-                                            </a>
-                                        </div>
+                                        
                                         <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Tiện ích</div>
                                         <div className="flex flex-col hover:cursor-pointer">
                                             <Link href="/myLikePost" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300" >
@@ -615,15 +606,7 @@ const Header = () => {
                                             <span className="text-xs text-slate-400">Đang theo dõi</span>
                                         </div>
                                     </div>
-                                    <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Quản lý đơn hàng</div>
-                                    <div className="flex flex-col">
-                                        <a href="#" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
-                                            <div className="rounded-full bg-green-400 p-1">
-                                                <FaMoneyCheckDollar className="text-white" size="16px" />
-                                            </div>
-                                            <span className="text-sm">Đơn bán</span>
-                                        </a>
-                                    </div>
+                                
                                     <div className="bg-gray-100 py-1 pl-2 text-sm font-bold text-gray-500">Khác</div>
                                     <div className="flex flex-col">
                                         <Link href="/settings/profile" className="flex items-center gap-3 rounded-md py-2 px-3 hover:bg-slate-300">
